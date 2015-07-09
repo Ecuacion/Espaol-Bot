@@ -91,6 +91,7 @@ exports.commands = {
 		}
 		if (!Bot.rooms[tarRoom] || Bot.rooms[tarRoom].type !== 'chat') return this.reply(this.trad('notchat') + textHelper);
 		if (!this.isExcepted && !this.botRanked('@')) return this.reply(this.botName + " " + this.trad('notmod'));
+		if (tarRoom === 'salastaff') tarRoom = 'espaol';
 
 		var added = [];
 		var illegalNick = [];
@@ -142,6 +143,7 @@ exports.commands = {
 		}
 		if (!Bot.rooms[tarRoom] || Bot.rooms[tarRoom].type !== 'chat') return this.reply(this.trad('notchat') + textHelper);
 		if (!this.isExcepted && !this.botRanked('@')) return this.reply(this.botName + " " + this.trad('notmod'));
+		if (tarRoom === 'salastaff') tarRoom = 'espaol';
 
 		arg = arg.split(',');
 
@@ -186,6 +188,7 @@ exports.commands = {
 		}
 		if (!Bot.rooms[tarRoom] || Bot.rooms[tarRoom].type !== 'chat') return this.reply(this.trad('notchat') + textHelper);
 		if (!this.isExcepted && !this.botRanked('@')) return this.reply(Bot.status.nickName + " " + this.trad('notmod'));
+		if (tarRoom === 'salastaff') tarRoom = 'espaol';
 
 		if (!arg) return this.reply(this.trad('notarg'));
 
@@ -219,6 +222,7 @@ exports.commands = {
 		}
 		if (!Bot.rooms[tarRoom] || Bot.rooms[tarRoom].type !== 'chat') return this.reply(this.trad('notchat') + textHelper);
 		if (!this.isExcepted && !this.botRanked('@')) return this.reply(Bot.status.nickName + " " + this.trad('notmod'));
+		if (tarRoom === 'salastaff') tarRoom = 'espaol';
 
 		if (!arg) return this.reply(this.trad('notarg'));
 
@@ -244,6 +248,7 @@ exports.commands = {
 			textHelper = ' (' + tarRoom + ')';
 		}
 		if (!Bot.rooms[tarRoom] || Bot.rooms[tarRoom].type !== 'chat') return this.reply(this.trad('notchat') + textHelper);
+		if (tarRoom === 'salastaff') tarRoom = 'espaol';
 
 		var text = '';
 		var nBans = 0;
@@ -297,7 +302,10 @@ exports.commands = {
 	vzt: 'zerotol',
 	viewzerotol: 'zerotol',
 	zerotol: function (arg, by, room, cmd) {
-		if (!this.isRanked('~')) return;
+		if (!arg) {
+			return this.pmReply('Actualmente **' + (getZeroTol(toId(by)) ? 'SÍ' : 'NO') + '** estás en la lista de tolerancia cero.');
+		}
+		if (!this.isRoomRanked('salastaff', '%')) return false;
 		var ztLevels, defaultLevel, aliases;
 		if (Config.moderation && Config.moderation.zeroToleranceLevels && Config.moderation.zeroToleranceDefaultLevel) {
 			ztLevels = Config.moderation.zeroToleranceLevels;
@@ -310,6 +318,7 @@ exports.commands = {
 			return this.reply(this.trad('nolevels'));
 		}
 		if (cmd === 'vzt' || cmd === 'viewzerotol') {
+			if (!this.isRanked('~')) return;
 			var ztList = [];
 			if (Settings.settings['zerotol']) {
 				for (var i in Settings.settings['zerotol']) {
@@ -334,11 +343,7 @@ exports.commands = {
 			if (level) level = (ztLevels[level] && ztLevels[level].name) ? ztLevels[level].name : level;
 			this.reply(this.trad('user') + ' "' + user + '" ' + this.trad('is') + ' ' + (level ? this.trad('y') : this.trad('n')) + ' ' + this.trad('in') + '. ' + (level ? ('(' + level + ')') : ''));
 		} else {
-			var aliases = {
-				'low': 'l',
-				'normal': 'n',
-				'high': 'h'
-			};
+			if (!this.isRanked('~')) return;
 			switch (toId(args[0])) {
 				case 'add':
 					if (args.length < 2) return this.reply(this.trad('u1') + ': ' + this.cmdToken + cmd + ' ' + this.trad('u2'));
@@ -432,6 +437,7 @@ exports.commands = {
 		}
 
 		if (tarRoom !== 'global' && (!Bot.rooms[tarRoom] || Bot.rooms[tarRoom].type !== 'chat')) return this.reply(this.trad('notchat') + textHelper);
+		if (tarRoom === 'salastaff') tarRoom = 'espaol';
 		arg = arg.trim().toLowerCase();
 
 		var bannedPhrases = Settings.settings['bannedphrases'] ? Settings.settings['bannedphrases'][tarRoom] : null;
@@ -469,6 +475,7 @@ exports.commands = {
 		}
 
 		if (tarRoom !== 'global' && (!Bot.rooms[tarRoom] || Bot.rooms[tarRoom].type !== 'chat')) return this.reply(this.trad('notchat') + textHelper);
+		if (tarRoom === 'salastaff') tarRoom = 'espaol';
 		arg = arg.trim().toLowerCase();
 
 		if (!Settings.settings['bannedphrases']) return this.reply(this.trad('phrase') + ' "' + arg + '" ' + this.trad('not') + textHelper);
@@ -508,6 +515,7 @@ exports.commands = {
 		}
 
 		if (tarRoom !== 'global' && (!Bot.rooms[tarRoom] || Bot.rooms[tarRoom].type !== 'chat')) return this.reply(this.trad('notchat') + textHelper);
+		if (tarRoom === 'salastaff') tarRoom = 'espaol';
 
 		if (tarRoom === 'global') bannedFrom += this.trad('globally');
 		else bannedFrom += this.trad('in') + ' ' + tarRoom;
@@ -551,6 +559,7 @@ exports.commands = {
 		}
 
 		if (tarRoom !== 'global' && (!Bot.rooms[tarRoom] || Bot.rooms[tarRoom].type !== 'chat')) return this.reply(this.trad('notchat') + textHelper);
+		if (tarRoom === 'salastaff') tarRoom = 'espaol';
 		arg = arg.trim().toLowerCase();
 
 		var bannedPhrases = Settings.settings['inapropiatephrases'] ? Settings.settings['inapropiatephrases'][tarRoom] : null;
@@ -588,6 +597,7 @@ exports.commands = {
 		}
 
 		if (tarRoom !== 'global' && (!Bot.rooms[tarRoom] || Bot.rooms[tarRoom].type !== 'chat')) return this.reply(this.trad('notchat') + textHelper);
+		if (tarRoom === 'salastaff') tarRoom = 'espaol';
 		arg = arg.trim().toLowerCase();
 
 		if (!Settings.settings['inapropiatephrases']) return this.reply(this.trad('phrase') + ' "' + arg + '" ' + this.trad('not') + textHelper);
@@ -627,6 +637,7 @@ exports.commands = {
 		}
 
 		if (tarRoom !== 'global' && (!Bot.rooms[tarRoom] || Bot.rooms[tarRoom].type !== 'chat')) return this.reply(this.trad('notchat') + textHelper);
+		if (tarRoom === 'salastaff') tarRoom = 'espaol';
 
 		if (tarRoom === 'global') bannedFrom += this.trad('globally');
 		else bannedFrom += this.trad('in') + ' ' + tarRoom;
@@ -673,6 +684,7 @@ exports.commands = {
 			textHelper = ' (' + tarRoom + ')';
 		}
 		if (tarRoom !== 'global' && (!Bot.rooms[tarRoom] || Bot.rooms[tarRoom].type !== 'chat')) return this.reply(this.trad('notchat') + textHelper);
+		if (tarRoom === 'salastaff') tarRoom = 'espaol';
 
 		if (Bot.rooms[tarRoom] && Bot.rooms[tarRoom].type === 'chat' && toId(arg) in {'on': 1, 'enable': 1}) {
 			if (!this.isRanked('#')) return false;
@@ -752,6 +764,7 @@ exports.commands = {
 			textHelper = ' (' + tarRoom + ')';
 		}
 		if (tarRoom !== 'global' && (!Bot.rooms[tarRoom] || Bot.rooms[tarRoom].type !== 'chat')) return this.reply(this.trad('notchat') + textHelper);
+		if (tarRoom === 'salastaff') tarRoom = 'espaol';
 
 		arg = toId(arg);
 
@@ -790,6 +803,7 @@ exports.commands = {
 			tarRoom = toRoomid(args[0]);
 		}
 		if (!Bot.rooms[tarRoom] || Bot.rooms[tarRoom].type !== 'chat') return this.reply(this.trad('notchat') + ' (' + tarRoom + ')');
+		if (tarRoom === 'salastaff') tarRoom = 'espaol';
 		var modTable = {
 			'caps': 1,
 			'stretching': 1,

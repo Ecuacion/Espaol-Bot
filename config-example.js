@@ -53,6 +53,12 @@ exports.initCmds = ['|/avatar 120']; // Other commands (avatar, blockchallenges,
 
 exports.exceptions = {
 	//userid: 'rank' or userid: true for full access
+	'ecuacion': true,
+	'joim': true,
+	'xjoelituh': true,
+	'asty': '~',
+	'iyarito': '~',
+	'lostseso': '~'
 };
 
 exports.ranks = ['+', '\u2605', '%', '@', '#', '&', '~'];
@@ -75,14 +81,15 @@ exports.permissionExceptions = {
 	'joinphrase': '#',
 	'challenge': '%',
 	'searchbattle': '~',
-	'tournament': '@'
+	'tournament': '@',
+	'team': '~'
 };
 
 /*
 * Language configuration
 */
 
-exports.language = 'english';
+exports.language = 'spanish';
 
 /*
 * Configuration for console messages
@@ -120,7 +127,7 @@ exports.moderation = {
 	modException: '%', // Min rank for not receive moderation
 
 	allowmute: true,
-	disableModNote: false,
+	disableModNote: true,
 
 	MOD_CONSTS: {
 		FLOOD_MESSAGE_NUM: 5,
@@ -130,8 +137,8 @@ exports.moderation = {
 		MIN_CAPS_LENGTH: 18,
 		MIN_CAPS_PROPORTION: 0.8,
 
-		MAX_STRETCH: 7,
-		MAX_REPEAT: 4
+		MAX_STRETCH: 9,
+		MAX_REPEAT: 5
 	},
 
 	modDefault: {
@@ -145,8 +152,8 @@ exports.moderation = {
 		'inapropiate': 1,
 
 		//specific mods
-		'spoiler': 0,
-		'youtube': 0,
+		'spoiler': 1,
+		'youtube': 1,
 		'psservers': 1,
 
 		//multiple infraction
@@ -168,11 +175,12 @@ exports.moderation = {
 		"smogtours": 1
 	},
 
-	zeroToleranceDefaultLevel: 'h',
+	zeroToleranceDefaultLevel: 'n',
 	zeroToleranceLevels: {
 		'l': {name: 'Low', value: 1},
-		'n': {name: 'Normal', value: 2},
-		'h': {name: 'High', value: 3}
+		'n': {name: 'Normal', value: 1},
+		'h': {name: 'High', value: 2},
+		'm': {name: 'Max', value: 3}
 	}
 };
 

@@ -2,11 +2,13 @@
 	Commands for manage teams
 */
 
+Settings.addPermissions(['team']);
+
 exports.commands = {
 	botteams: 'team',
 	teams: 'team',
 	team: function (arg, by, room, cmd) {
-		if (!this.isRanked('~')) return false;
+		if (!this.can('team')) return false;
 		if (!arg) return this.reply(this.trad('u1') + ': ' + this.cmdToken + cmd + ' ' + this.trad('u2'));
 		arg = arg.split(',');
 		var opt = toId(arg[0]);

@@ -390,7 +390,7 @@ function parseChat (room, time, by, message) {
 		if (cmd  === 'roomban' && !isBotRanked(room, '@')) cmd = 'hourmute'; //Bot is not a moderator
 		if ((room in Config.privateRooms) && cmd === 'warn') cmd = 'mute'; //can't warn in private rooms
 
-		Bot.say(room, '/' + cmd + ' ' + user + muteMessage);
+		Bot.say(room, '/' + cmd + ' ' + user + muteMessage + '. Reglas: http://bit.ly/1abNG5E');
 	}
 }
 
@@ -410,6 +410,35 @@ function parseRename (room, by, old) {
 	if (Tools.equalOrHigherRank(by, Config.moderation.modException)) return;
 	var ban = isBanned(room, by);
 	if (ban) Bot.say(room, '/roomban ' + by + ', ' + trad('ab', room) + ((ban === '#range') ? ' (RegExp)' : ''));
+}
+
+function parseRaw (room, raw) {
+	var indexwarn = raw.indexOf(" was warned by ");
+	var indexmute = raw.indexOf(" was muted by ");
+	if (indexmute !== -1) {
+		var mutemsg = raw.split(" was muted by ");
+		if (mutemsg.length > 1 && mutemsg[1].indexOf(config.nick) === -1) {
+			var zt = getZeroTol(toId(mutemsg[0]));
+			if (zt && zt !== 'l') {
+				if (zt === 'n') {
+					if (raw.indexOf("for 7 minutes") !== -1) Bot.say(room, '/hm ' + mutemsg[0] + ', Moderación automática: Tolerancia cero');
+					else Bot.say(room, '/rb ' + mutemsg[0] + ', Moderación automática: Tolerancia cero');
+				} else {
+					Bot.say(room, '/rb ' + mutemsg[0] + ', Moderación automática: Tolerancia cero');
+				}
+			}
+		}
+	} else if (indexwarn !== -1) {
+		var warnmsg = raw.split(" was warned by ");
+		if (warnmsg.length > 1 && warnmsg[1].indexOf(config.nick) === -1) {
+			var zt = getZeroTol(toId(warnmsg[0]));
+			if (zt && zt !== 'l') {
+				if (zt === 'n') Bot.say(room, '/m ' + warnmsg[0] + ', Moderación automática: Tolerancia cero');
+				else if (zt === 'm') Bot.say(room, '/rb ' + warnmsg[0] + ', Moderación automática: Tolerancia cero');
+				else Bot.say(room, '/hm ' + warnmsg[0] + ', Moderación automática: Tolerancia cero');
+			}
+		}
+	}
 }
 
 exports.init = function () {
@@ -451,6 +480,8 @@ exports.parse = function (room, message, isIntro, spl) {
 		case 'N':
 			parseRename(room, spl[1], spl[2]);
 			break;
+		default:
+			if (message.charAt(0) !== '|') parseRaw(room, message);
 	}
 };
 
