@@ -1,6 +1,6 @@
 {
-  "name": "pokemon-showdown-node-bot",
-  "version": "0.0.1",
+  "name": "espaol-bot",
+  "version": "2.0.0",
   "author": "Ecuacion",
   "scripts": {
     "start": "node index.js",

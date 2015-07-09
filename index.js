@@ -399,3 +399,9 @@ var checkSystem = function () {
 	}
 };
 var sysChecker = setInterval(checkSystem, 60 * 60 * 1000);
+
+//Crashlog
+process.on('uncaughtException', function (err) {
+	errlog(err.stack);
+	error(err.message);
+});
