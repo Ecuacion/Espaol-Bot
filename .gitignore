@@ -1,3 +1,10 @@
+data/*.js
+data/*.json
+config.js
+
+#gulp
+gulp-cache
+
 # Logs
 logs
 *.log

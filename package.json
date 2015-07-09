@@ -1,0 +1,43 @@
+{
+  "name": "pokemon-showdown-node-bot",
+  "version": "0.0.1",
+  "author": "Ecuacion",
+  "scripts": {
+    "start": "node index.js",
+	"test": "gulp"
+  },
+  "contributors": [
+    "Ecuacion <alajandro5gt01@gmail.com>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Ecuacion/Pokemon-Showdown-Node-Bot"
+  },
+  "bugs": {
+    "url": "https://github.com/Ecuacion/Pokemon-Showdown-Node-Bot/issues"
+  },
+  "main": "index",
+  "bin": "./index.js",
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "sugar": "1.4.1",
+    "colors": "1.0.3",
+	"node-ps-client": "0.1.2"
+  },
+  "devDependencies": {
+    "cache-swap": "~0.2.0",
+    "gulp": "~3.9.0",
+    "gulp-cache": "~0.2.8",
+    "gulp-jshint": "~1.11.2",
+    "gulp-jscs": "~1.6.0",
+    "gulp-replace": "~0.5.1",
+    "jshint-stylish": "~2.0.0",
+    "lazypipe": "~1.0.1",
+    "merge-stream": "~0.1.7"
+  },
+  "description": "Pokemon Showdown Bot",
+  "homepage": "https://github.com/Ecuacion/Pokemon-Showdown-Node-Bot"
+}
