@@ -23,6 +23,7 @@ exports.commands = {
 		}
 	},
 
+	hora: 'time',
 	bottime: 'time',
 	time: function (arg, by, room, cmd) {
 		var f = new Date();

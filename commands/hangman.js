@@ -54,11 +54,11 @@ var Hangman = function () {
 			if (!phrase) return;
 			var datas = phrase.split(" ");
 			this.word = [];
-			this.wordStr = phrase.toLowerCase().replace(/[^a-z0-9ñ]/g, '');
+			this.wordStr = phrase.toLowerCase().replace(/[^a-z0-9Ã±]/g, '');
 			this.wordStrF = '';
 			var actWord;
 			for (var i = 0; i < datas.length; i++) {
-				actWord = datas[i].toLowerCase().replace(/[^a-z0-9ñ]/g, '');
+				actWord = datas[i].toLowerCase().replace(/[^a-z0-9Ã±]/g, '');
 				if (!actWord.length) continue;
 				for (var j = 0; j < actWord.length; j++) {
 					this.word.push(
@@ -75,7 +75,7 @@ var Hangman = function () {
 		},
 	
 		guess: function (key) {
-			key = key.toLowerCase().replace(/[^a-z0-9ñ]/g, '');
+			key = key.toLowerCase().replace(/[^a-z0-9Ã±]/g, '');
 			if (!key.length || key.length > 1) return;
 			if (this.saidKeys[key]) return;
 			var keyCount = 0;
@@ -115,7 +115,7 @@ exports.commands = {
 		if (Games[room]) {
 			if (Games[room].type === 'Hangman') {
 				var res = Games[room].game.getStatus();
-				return this.repy("**Hangman:** " + res.word + " | " + res.saidKeys + " | Pista: " + Games[room].game.clue);
+				return this.reply("**Hangman:** " + res.word + " | " + res.saidKeys + " | Pista: " + Games[room].game.clue);
 			}
 			return this.reply('Ya hay un juego de ' + Games[room].type + '. No se puede iniciar otro')
 		}
@@ -283,7 +283,7 @@ exports.commands = {
 		switch (Games[room].type) {
 			case 'Hangman':
 				if (arg.length > 1) {
-					if (arg.toLowerCase().replace(/[^a-z0-9ñ]/g, '') === Games[room].game.wordStr) {
+					if (arg.toLowerCase().replace(/[^a-z0-9Ã±]/g, '') === Games[room].game.wordStr) {
 						var winner = by.substr(1);
 						this.reply("Felicidades a **" + winner + "** por ganar el juego de hangman! La palabra era **" + Games[room].game.wordStrF + "**");
 						delete Games[room]; //deallocate
@@ -295,7 +295,7 @@ exports.commands = {
 				var res = Games[room].game.guess(arg);
 				if (Games[room].game.maxFail && Games[room].game.failCount > Games[room].game.maxFail) {
 					var losser = by.substr(1);
-					this.reply("Se ha excedido el número máximo de errores y **" + losser + "** ha sido ahorcado! La palabra era **" + Games[room].game.wordStrF + "**");
+					this.reply("Se ha excedido el numero maximo de errores y **" + losser + "** ha sido ahorcado! La palabra era **" + Games[room].game.wordStrF + "**");
 					delete Games[room]; //deallocate
 					break;
 				}
