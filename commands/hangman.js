@@ -109,13 +109,14 @@ var Hangman = function () {
 Settings.addPermissions(['games']);
 
 exports.commands = {
+	hangmanstatus: 'hangman',
 	ahorcado: 'hangman',
 	hangman: function(arg, by, room, cmd) {
 		if (!this.can('games')) return false;
 		if (Games[room]) {
-			if (Games[room].type === 'Hangman') {
+			if (cmd === 'hangmanstatus' && Games[room].type === 'Hangman') {
 				var res = Games[room].game.getStatus();
-				return this.reply("**Hangman:** " + res.word + " | " + res.saidKeys + " | Pista: " + Games[room].game.clue);
+				return this.reply("**Hangman:** " + res.word + " | **" + Games[room].game.clue + "** | " + res.saidKeys + " | Se juega con **" + this.cmdToken + 'g** [letra/palabra]');
 			}
 			return this.reply('Ya hay un juego de ' + Games[room].type + '. No se puede iniciar otro')
 		}
@@ -159,9 +160,9 @@ exports.commands = {
 		Games[room].game.clue = clue;
 		if (maxFail) {
 			Games[room].game.maxFail = maxFail;
-			this.reply("**Hangman:** " + res.word + " | Pista: " + Games[room].game.clue + " | Se permiten " + maxFail + " fallos");
+			this.reply("**Hangman:** " + res.word + " | Pista: " + Games[room].game.clue + " | Se permiten " + maxFail + " fallos | Se juega con **" + this.cmdToken + 'g** [letra/palabra]');
 		} else {
-			this.reply("**Hangman:** " + res.word + " | Pista: " + Games[room].game.clue);
+			this.reply("**Hangman:** " + res.word + " | **" + Games[room].game.clue + "** | Se juega con **" + this.cmdToken + 'g** [letra/palabra]');
 		}
 	},
 	
@@ -217,6 +218,7 @@ exports.commands = {
 							Games[room].game.clue =  pokedex[pokemon[rand]].types[1] ? (pokedex[pokemon[rand]].types[1] + " type") : (pokedex[pokemon[rand]].types[0] + " type");
 						}
 				}
+				Games[room].game.clue = "Pokemon " + Games[room].game.clue;
 				break;
 			case 'move':
 				try {
@@ -270,11 +272,10 @@ exports.commands = {
 		
 		if (maxFail) {
 			Games[room].game.maxFail = maxFail;
-			this.reply("**Hangman:** " + res.word + " | Pista: " + Games[room].game.clue + " | Se permiten " + maxFail + " fallos");
+			this.reply("**Hangman:** " + res.word + " | Pista: " + Games[room].game.clue + " | Se permiten " + maxFail + " fallos | Se juega con **" + this.cmdToken + 'g** [letra/palabra]');
 		} else {
-			this.reply("**Hangman:** " + res.word + " | Pista: " + Games[room].game.clue);
+			this.reply("**Hangman:** " + res.word + " | **" + Games[room].game.clue + "** | Se juega con **" + this.cmdToken + 'g** [letra/palabra]');
 		}
-		
 	},
 	
 	g: 'guess',
@@ -307,7 +308,7 @@ exports.commands = {
 					break;
 
 				}
-				this.reply("**Hangman:** " + res.word + " | " + res.saidKeys + " | Pista: " + Games[room].game.clue);
+				this.reply("**Hangman:** " + res.word + " | **" + Games[room].game.clue + "** | " +  res.saidKeys + " | Se juega con **" + this.cmdToken + 'g** [letra/palabra]');
 				break;
 		}
 	},
