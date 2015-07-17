@@ -46,6 +46,7 @@ module.exports = {
 		if (moveData.type === "Water" && this.has_ability(pokemonA, ["Water Absorb", "Dry Skin", "Storm Drain"])) return true;
 		if (moveData.type === "Fire" && this.has_ability(pokemonA, ["Flash Fire"])) return true;
 		if (moveData.type === "Electric" && this.has_ability(pokemonA, ["Volt Absorb", "Lightning Rod"])) return true;
+		if ((moveData.category in {"Physical": 1, "Special": 1}) && this.gen6_get_mux(moveData.type, data1.types) <= 1 && this.has_ability(pokemonA, ["Wonder Guard"])) return true;
 		return false;
 	},
 	getBestLead: function (data) {
@@ -76,7 +77,7 @@ module.exports = {
 					else dataMove.basePower = 102;
 				}
 				if (typeof dataMove.basePower !== "number" || !dataMove.basePower) continue;
-				if (dataMove.name in {"Focus Punch": 1, "Explosion": 1, "Self-Destruct": 1}) continue;
+				if (dataMove.name in {"Focus Punch": 1, "Explosion": 1, "Self-Destruct": 1, "Dream Eater": 1}) continue;
 				if (dataMove.category === "Special") {
 					basePower = dataMove.basePower * actPoke.stats['spa'];
 				} else {
@@ -133,7 +134,7 @@ module.exports = {
 				else dataMove.basePower = 102;
 			}
 			if (typeof dataMove.basePower !== "number" || !dataMove.basePower) continue;
-			if (dataMove.name in {"Focus Punch": 1, "Explosion": 1, "Self-Destruct": 1}) continue;
+			if (dataMove.name in {"Focus Punch": 1, "Explosion": 1, "Self-Destruct": 1, "Dream Eater": 1}) continue;
 			switch (req.active[0].baseAbility) {
 				case 'Aerilate':
 					if (dataMove.type === "Normal") dataMove.type = "Flying";

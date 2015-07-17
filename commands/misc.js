@@ -37,7 +37,11 @@ exports.commands = {
 	guide: 'help',
 	botguide: 'help',
 	help: function (arg, user, room) {
-		this.restrictReply(this.trad('guide') + ': https://github.com/Ecuacion/Pokemon-Showdown-Node-Bot/blob/master/commands/README.md', 'help');
+		this.restrictReply(this.trad('guide') + ': http://ps-salaespanol.proboards.com/thread/1366/gu-del-bot-sala-aminitrabottt', 'help');
+	},
+	
+	suspect: function (arg, user, room) {
+		this.parse(this.cmdToken + 'dyn suspect-' + arg);
 	},
 
 	youtubelinks: 'youtube',

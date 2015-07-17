@@ -76,6 +76,11 @@
 			'alias': 'es ahora alias de',
 			'already': 'es un alias. No se puede establecer un alias de otro alias'
 		},
+		getdyncmdlist: {
+			'nocmds': 'No hay ningún comando',
+			'list': 'Comandos Dinámicos',
+			'err': 'Error: No se han podido subir los comandos a Hastebin'
+		},
 		/*
 		* Misc Commands
 		*/
@@ -117,6 +122,37 @@
 			'e': 'Reconocimiento automático de links de YouTube ha sido activado en esta sala',
 			'ad': 'Reconocimiento automático de links de YouTube no estaba activado para la sala',
 			'd': 'Reconocimiento automático de links de YouTube ha sido desactivado en esta sala'
+		},
+		/*
+		* Quotes
+		*/
+		quote: {
+			'nodata': 'La base de datos está vacía'
+		},
+		setquote: {
+			'notemp': 'No hay datos en temp, usa el comando **stemp** antes de hacer esto',
+			'q': 'Cita',
+			'modified': 'ha sido modificada',
+			'created': 'ha sido creada'
+		},
+		delquote: {
+			'q': 'Cita',
+			'd': 'ha sido eliminada',
+			'n': 'no existe'
+		},
+		viewquotes: {
+			'q': 'Cita',
+			'n': 'no existe',
+			'empty': 'La lista de citas está vacía',
+			'list': 'Lista de citas',
+			'err': 'Error: No se han podido subir las citas a Hastebin'
+		},
+		addquotes: {
+			'notfound': 'Error: Documento no encontrado',
+			'd': 'Descargando documento de Hastebin',
+			'add': 'Agregadas',
+			'q': 'citas',
+			'err': 'Error: no se ha podido establecer la conexión con hastebin'
 		},
 		/*
 		* Pokemon Commands
@@ -235,12 +271,13 @@
 		},
 		team: {
 			'u1': 'Uso correcto',
-			'u2': '[add/delete], [nombre], [formato], [Exportable en Hastebin]',
+			'u2': '[add/delete/get], [nombre], [formato], [Exportable en Hastebin]',
 			'format': 'El formato',
 			'notexists': 'no existe',
 			'download': 'Descargando y procesando equipo',
 			'team': 'El equipo',
 			'added': 'ha sido agregado correctamente a la lista de equipos',
+			'err': 'Error: no se ha podido subir el equipo a hastebin',
 			'err1': 'Error: No se ha encontrado el documento de Hastebin',
 			'err2': 'Error: El formato encontrado no era válido',
 			'err3': 'Error: Ya existe otro equipo con el mismo nombre, use otro nombre o elimine dicho equipo',

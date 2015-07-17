@@ -76,6 +76,11 @@ exports.translations = {
 			'alias': 'is now an alias of',
 			'already': 'is an alias. You can\'t set an alias of another alias'
 		},
+		getdyncmdlist: {
+			'nocmds': 'No commands',
+			'list': 'Dynamic cmds',
+			'err': 'Error: failed to upload commands to Hastebin'
+		},
 		/*
 		* Misc Commands
 		*/
@@ -117,6 +122,37 @@ exports.translations = {
 			'e': 'YouTube link recognition is now enabled for this room',
 			'ad': 'YouTube link recognition is already disabled for room',
 			'd': 'YouTube link recognition is now disabled for this room'
+		},
+		/*
+		* Quotes
+		*/
+		quote: {
+			'nodata': 'Database is empty'
+		},
+		setquote: {
+			'notemp': 'There is no temp string to set, use **stemp** before doing this',
+			'q': 'Quote',
+			'modified': 'has been successfully modified',
+			'created': 'has been successfully created'
+		},
+		delquote: {
+			'q': 'Quote',
+			'n': 'does not exist',
+			'd': 'has been successfully deleted'
+		},
+		viewquotes: {
+			'q': 'Quote',
+			'n': 'does not exist',
+			'empty': 'List of quotes is empty',
+			'list': 'List of quotes',
+			'err': 'Error: failed to upload quotes to Hastebin'
+		},
+		addquotes: {
+			'notfound': 'Error: Document not found',
+			'd': 'Downloading Hastebin document',
+			'add': 'Added',
+			'q': 'quotes',
+			'err': 'Error: failed to get quotes from Hastebin'
 		},
 		/*
 		* Pokemon Commands
@@ -235,12 +271,13 @@ exports.translations = {
 		},
 		team: {
 			'u1': 'Usage',
-			'u2': '[add/delete], [name], [format], [Exportable in Hastebin]',
+			'u2': '[add/delete/get], [name], [format], [Exportable in Hastebin]',
 			'format': 'Format',
 			'notexists': 'does not exists',
 			'download': 'Dowloading and parsing team',
 			'team': 'Team',
 			'added': 'added successfully to bot teams list',
+			'err': 'Error: failed to upload team to Hastebin',
 			'err1': 'Error: Hastebin document not found',
 			'err2': 'Error: Invalid team data',
 			'err3': 'Error: There was already a team with that name, use another name or delete the other team',

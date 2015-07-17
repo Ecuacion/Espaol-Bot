@@ -81,6 +81,7 @@ module.exports = {
 	},
 
 	getTeam: function (format) {
+		if (!format) return;
 		var formatId = toId(format);
 		var teamStuff = this.teams[formatId];
 		if (!teamStuff || !teamStuff.length) return false;

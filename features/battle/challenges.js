@@ -2,7 +2,7 @@
 exports.challenges = {};
 
 function canChallenge(i, nBattles) {
-	if (!nBattles) return true;
+	if (nBattles < 2) return true;
 	if (Config.aceptAll) return true;
 	if (Tools.equalOrHigherRank(i, '%')) return true;
 	return false;
