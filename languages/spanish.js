@@ -225,7 +225,7 @@
 			'e21': 'El formato',
 			'e22': 'no es válido para buscar batallas en ladder',
 			'e31': 'No tengo equipos para buscar batalla en el formato',
-			'e32': 'Edite teams.js para agregar más equipos'
+			'e32': 'Use el comando "team add" para agregar más equipos'
 		},
 		ladderstart: {
 			'stop': 'La búsqueda de batallas se ha detenido',
@@ -234,7 +234,7 @@
 			'e21': 'El formato',
 			'e22': 'no es válido para buscar batallas en ladder',
 			'e31': 'No tengo equipos para buscar batalla en el formato',
-			'e32': 'Edite teams.js para agregar más equipos'
+			'e32': 'Use el comando "team add" para agregar más equipos'
 		},
 		challenge: {
 			'e11': 'Uso Correcto:',
@@ -242,7 +242,7 @@
 			'e21': 'El formato',
 			'e22': 'no es válido para retos',
 			'e31': 'No tengo equipos para retar en el formato',
-			'e32': 'Edite teams.js para agregar más equipos'
+			'e32': 'Use el comando "team add" para agregar más equipos'
 		},
 		jointour: {
 			'notchat': 'Este comando solo está disponible para las salas de chat',
@@ -250,7 +250,7 @@
 			'e2': 'Ya estaba participando en el torneo',
 			'e3': 'El torneo ya ha empezado',
 			'e41': 'No tengo equipos para unirme a un torneo en formato',
-			'e42': 'Edite teams.js para agregar más equipos'
+			'e42': 'Use el comando "team add" para agregar más equipos'
 		},
 		leavetour: {
 			'notchat': 'Este comando solo está disponible para las salas de chat',
@@ -271,7 +271,11 @@
 		},
 		team: {
 			'u1': 'Uso correcto',
-			'u2': '[add/delete/get], [nombre], [formato], [Exportable en Hastebin]',
+			'u2': '[add/delete/get/check]',
+			'u3': 'add, [nombre], [formato], [Exportable en Hastebin]',
+			'u4': 'delete, [nombre]',
+			'u5': 'get, [nombre]',
+			'u6': 'check, [nombre], (usuario)',
 			'format': 'El formato',
 			'notexists': 'no existe',
 			'download': 'Descargando y procesando equipo',
