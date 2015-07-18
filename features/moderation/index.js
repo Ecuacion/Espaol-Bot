@@ -417,7 +417,7 @@ function parseRaw (room, raw) {
 	var indexmute = raw.indexOf(" was muted by ");
 	if (indexmute !== -1) {
 		var mutemsg = raw.split(" was muted by ");
-		if (mutemsg.length > 1 && mutemsg[1].indexOf(config.nick) === -1) {
+		if (mutemsg.length > 1 && mutemsg[1].indexOf(Bot.status.nickName) === -1) {
 			var zt = getZeroTol(toId(mutemsg[0]));
 			if (zt && zt !== 'l') {
 				if (zt === 'n') {
@@ -430,7 +430,7 @@ function parseRaw (room, raw) {
 		}
 	} else if (indexwarn !== -1) {
 		var warnmsg = raw.split(" was warned by ");
-		if (warnmsg.length > 1 && warnmsg[1].indexOf(config.nick) === -1) {
+		if (warnmsg.length > 1 && warnmsg[1].indexOf(Bot.status.nickName) === -1) {
 			var zt = getZeroTol(toId(warnmsg[0]));
 			if (zt && zt !== 'l') {
 				if (zt === 'n') Bot.say(room, '/m ' + warnmsg[0] + ', Moderación automática: Tolerancia cero');
