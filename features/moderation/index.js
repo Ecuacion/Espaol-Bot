@@ -1,4 +1,4 @@
-/*
+Ôªø/*
 	Moderation Feature
 */
 
@@ -421,10 +421,10 @@ function parseRaw (room, raw) {
 			var zt = getZeroTol(toId(mutemsg[0]));
 			if (zt && zt !== 'l') {
 				if (zt === 'n') {
-					if (raw.indexOf("for 7 minutes") !== -1) Bot.say(room, '/hm ' + mutemsg[0] + ', ModeraciÛn autom·tica: Tolerancia cero');
-					else Bot.say(room, '/rb ' + mutemsg[0] + ', ModeraciÛn autom·tica: Tolerancia cero');
+					if (raw.indexOf("for 7 minutes") !== -1) Bot.say(room, '/hm ' + mutemsg[0] + ', Moderaci√≥n autom√°tica: Tolerancia cero');
+					else Bot.say(room, '/rb ' + mutemsg[0] + ', Moderaci√≥n autom√°tica: Tolerancia cero');
 				} else {
-					Bot.say(room, '/rb ' + mutemsg[0] + ', ModeraciÛn autom·tica: Tolerancia cero');
+					Bot.say(room, '/rb ' + mutemsg[0] + ', Moderaci√≥n autom√°tica: Tolerancia cero');
 				}
 			}
 		}
@@ -433,9 +433,9 @@ function parseRaw (room, raw) {
 		if (warnmsg.length > 1 && warnmsg[1].indexOf(Bot.status.nickName) === -1) {
 			var zt = getZeroTol(toId(warnmsg[0]));
 			if (zt && zt !== 'l') {
-				if (zt === 'n') Bot.say(room, '/m ' + warnmsg[0] + ', ModeraciÛn autom·tica: Tolerancia cero');
-				else if (zt === 'm') Bot.say(room, '/rb ' + warnmsg[0] + ', ModeraciÛn autom·tica: Tolerancia cero');
-				else Bot.say(room, '/hm ' + warnmsg[0] + ', ModeraciÛn autom·tica: Tolerancia cero');
+				if (zt === 'n') Bot.say(room, '/m ' + warnmsg[0] + ', Moderaci√≥n autom√°tica: Tolerancia cero');
+				else if (zt === 'm') Bot.say(room, '/rb ' + warnmsg[0] + ', Moderaci√≥n autom√°tica: Tolerancia cero');
+				else Bot.say(room, '/hm ' + warnmsg[0] + ', Moderaci√≥n autom√°tica: Tolerancia cero');
 			}
 		}
 	}
