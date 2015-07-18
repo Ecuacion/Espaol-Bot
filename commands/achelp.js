@@ -77,7 +77,7 @@ exports.commands = {
 						return this.pmReply("La cuenta \"" + regName + "\" **no esta registrada**. Para poder ser autoconfirmed primero registra la cuenta en el boton de opciones (arriba a la derecha). Tras registrala deberás esperar una semana y ganar una batalla en ladder para ser autoconfirmed");
 					}
 					if (!checkAutoconfirmed(regtime)) {
-						return this.pmReply("A la cuenta \"" + regName + "\" la quedan **" + getDiffAutoconfirmed(regtime) + "** para ser autoconfirmed. Para hablar por el chat moderado debes esperar ese tiempo o unar otra cuenta que sí sea autoconfirmed");
+						return this.pmReply("A la cuenta \"" + regName + "\" la quedan **" + getDiffAutoconfirmed(regtime) + "** para ser autoconfirmed. Para hablar por el chat moderado debes esperar ese tiempo o usar otra cuenta que sí sea autoconfirmed");
 					}
 					if (!regData.ratings || isEmpty(regData.ratings)) {
 						return this.pmReply("La cuenta \"" + regName + "\" **no tiene ninguna batalla de ladder** registrada. Para ser autoconfirmed pulsa \"Look for a battle\" y, tras ganar una batalla, haz /logout y vuelve a iniciar sesion");

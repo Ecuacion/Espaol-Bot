@@ -1282,7 +1282,8 @@ exports.trad = {
 		{"en": "Xtransceiver", "es": "Videomisor"},
 		{"en": "Sapphire", "es": "Zafiro"},
 		{"en": "Zinc", "es": "Zinc"},
-		{"en": "Berry Juice", "es": "Zumo de baya"}
+		{"en": "Berry Juice", "es": "Zumo de baya"},
+		{"en": "Prison Bottle", "es": "Vasija castigo"}
 	],
 	"berry": [
 		{"en": "Cheri Berry", "es": "Baya Zreza"},
