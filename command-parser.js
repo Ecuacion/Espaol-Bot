@@ -55,6 +55,44 @@ var resourceMonitor = exports.resourceMonitor = {
 	}
 };
 
+/* Information for new Users */
+
+const REQUIRED_TIME_DIFF = 2 * 60 * 1000;
+
+var helpMonitor = exports.helpMonitor = {
+	lastHelpUsage: {},
+	canUseHelpCommand: function (user) {
+		if (!this.lastHelpUsage[user]) return true;
+		var diff = Date.now() - this.lastHelpUsage[user];
+		if (diff >= REQUIRED_TIME_DIFF) return true;
+		return false;
+	},
+	sweepUsage: function () {
+		for (var i in this.lastHelpUsage) {
+			if (this.canUseHelpCommand(i)) delete this.lastHelpUsage[i];
+		}
+	},
+	checkMessage: function (msg, words) {
+		for (var i = 0; i < words.length; i++) {
+			if (msg.indexOf(words[i]) >= 0) return true;
+		}
+		return false;
+	},
+	getCommand: function (by, msg) {
+		var user = toId(by);
+		if (!this.canUseHelpCommand(user) && !Tools.equalOrHigherRank(by, true)) return false;
+		var cmd;
+		if (this.checkMessage(msg.toLowerCase(), ['no', 'puedo', 'poder', 'deja']) && this.checkMessage(msg.toLowerCase(), ['hablar', 'chat', 'escribir'])) {
+			cmd = 'modchat';
+		} else {
+			cmd = 'hola';
+		}
+		this.lastHelpUsage[user] = Date.now();
+		this.sweepUsage();
+		return cmd;
+	}
+};
+
 /* Load commands */
 var loadCommands = exports.loadCommands = function (reloading) {
 	var errs = [];
@@ -150,7 +188,13 @@ var parse = exports.parse = function (room, by, msg) {
 		}
 	}
 
-	if (!cmdToken) return;
+	if (!cmdToken) {
+		if (room.charAt(0) === ',') {
+			var pseudoCmd = helpMonitor.getCommand(by, msg);
+			if (pseudoCmd) parse(room, by, commandTokens[0] + pseudoCmd);
+		}
+		return;
+	}
 
 	var toParse = msg.substr(cmdToken.length);
 	var spaceIndex = toParse.indexOf(' ');
