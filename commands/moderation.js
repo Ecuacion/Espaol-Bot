@@ -60,15 +60,6 @@ function unblacklistRegex(regex, room) {
 	return false;
 }
 
-function getTargetRoom(arg) {
-	if (!arg) return null;
-	if (arg.indexOf("[") !== 0) return null;
-	if (arg.indexOf("]") < 0) return null;
-	var target = toRoomid(arg.substr(arg.indexOf("[") + 1, arg.indexOf("]") - arg.indexOf("[") - 1));
-	var newArg = arg.substr(arg.indexOf("]") + 1);
-	return {arg: newArg, room: target};
-}
-
 Settings.addPermissions(['autoban', 'banword', 'joinphrase']);
 
 exports.commands = {
@@ -82,7 +73,7 @@ exports.commands = {
 	autoban: function (arg, by, room, cmd) {
 		if (!this.can('autoban')) return;
 		var tarRoom = room;
-		var targetObj = getTargetRoom(arg);
+		var targetObj = Tools.getTargetRoom(arg);
 		var textHelper = '';
 		if (targetObj && this.isExcepted) {
 			arg = targetObj.arg;
@@ -134,7 +125,7 @@ exports.commands = {
 	unautoban: function (arg, by, room, cmd) {
 		if (!this.can('autoban')) return;
 		var tarRoom = room;
-		var targetObj = getTargetRoom(arg);
+		var targetObj = Tools.getTargetRoom(arg);
 		var textHelper = '';
 		if (targetObj && this.isExcepted) {
 			arg = targetObj.arg;
@@ -179,7 +170,7 @@ exports.commands = {
 	regexautoban: function (arg, user, room) {
 		if (!this.can('autoban')) return;
 		var tarRoom = room;
-		var targetObj = getTargetRoom(arg);
+		var targetObj = Tools.getTargetRoom(arg);
 		var textHelper = '';
 		if (targetObj && this.isExcepted) {
 			arg = targetObj.arg;
@@ -213,7 +204,7 @@ exports.commands = {
 	unregexautoban: function (arg, user, room) {
 		if (!this.can('autoban')) return;
 		var tarRoom = room;
-		var targetObj = getTargetRoom(arg);
+		var targetObj = Tools.getTargetRoom(arg);
 		var textHelper = '';
 		if (targetObj && this.isExcepted) {
 			arg = targetObj.arg;
@@ -240,7 +231,7 @@ exports.commands = {
 	viewblacklist: function (arg, by, room, cmd) {
 		if (!this.can('autoban')) return;
 		var tarRoom = room;
-		var targetObj = getTargetRoom(arg);
+		var targetObj = Tools.getTargetRoom(arg);
 		var textHelper = '';
 		if (targetObj && this.isExcepted) {
 			arg = targetObj.arg;
@@ -428,7 +419,7 @@ exports.commands = {
 			tarRoom = room;
 		}
 
-		var targetObj = getTargetRoom(arg);
+		var targetObj = Tools.getTargetRoom(arg);
 		var textHelper = '';
 		if (targetObj && this.isExcepted) {
 			arg = targetObj.arg;
@@ -466,7 +457,7 @@ exports.commands = {
 			tarRoom = room;
 		}
 
-		var targetObj = getTargetRoom(arg);
+		var targetObj = Tools.getTargetRoom(arg);
 		var textHelper = '';
 		if (targetObj && this.isExcepted) {
 			arg = targetObj.arg;
@@ -506,7 +497,7 @@ exports.commands = {
 		} else {
 			tarRoom = room;
 		}
-		var targetObj = getTargetRoom(arg);
+		var targetObj = Tools.getTargetRoom(arg);
 		var textHelper = '';
 		if (targetObj && this.isExcepted) {
 			arg = targetObj.arg;
@@ -550,7 +541,7 @@ exports.commands = {
 			tarRoom = room;
 		}
 
-		var targetObj = getTargetRoom(arg);
+		var targetObj = Tools.getTargetRoom(arg);
 		var textHelper = '';
 		if (targetObj && this.isExcepted) {
 			arg = targetObj.arg;
@@ -588,7 +579,7 @@ exports.commands = {
 			tarRoom = room;
 		}
 
-		var targetObj = getTargetRoom(arg);
+		var targetObj = Tools.getTargetRoom(arg);
 		var textHelper = '';
 		if (targetObj && this.isExcepted) {
 			arg = targetObj.arg;
@@ -628,7 +619,7 @@ exports.commands = {
 		} else {
 			tarRoom = room;
 		}
-		var targetObj = getTargetRoom(arg);
+		var targetObj = Tools.getTargetRoom(arg);
 		var textHelper = '';
 		if (targetObj && this.isExcepted) {
 			arg = targetObj.arg;
@@ -676,7 +667,7 @@ exports.commands = {
 			tarRoom = room;
 		}
 
-		var targetObj = getTargetRoom(arg);
+		var targetObj = Tools.getTargetRoom(arg);
 		var textHelper = '';
 		if (targetObj && this.isExcepted) {
 			arg = targetObj.arg;
@@ -756,7 +747,7 @@ exports.commands = {
 			tarRoom = room;
 		}
 
-		var targetObj = getTargetRoom(arg);
+		var targetObj = Tools.getTargetRoom(arg);
 		var textHelper = '';
 		if (targetObj && this.isExcepted) {
 			arg = targetObj.arg;

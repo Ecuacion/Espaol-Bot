@@ -104,15 +104,19 @@ exports.language = 'spanish';
 */
 
 exports.debug = {
-	/* Status Messages */
-	info: true,
+	/* Basic messages - Production Mode */
 	error: true,
 	ok: true,
-
 	errlog: true,
-	monitor: false,
 
-	/* Internal Debug */
+	/* Monitoring */
+	info: true,
+	monitor: true,
+
+	room: true,
+	battle: false,
+
+	/* Debug Mode */
 	debug: false,
 	cmdr: false,
 
@@ -197,6 +201,8 @@ exports.moderation = {
 */
 
 exports.aceptAll = false;
+
+exports.maxBattles = 1;
 
 exports.winmsg = ['GG', 'g_g'];
 

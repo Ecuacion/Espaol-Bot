@@ -1,6 +1,15 @@
 const POKEDEX_FILE = './../../data/pokedex.js';
 const MOVEDEX_FILE = './../../data/moves.js';
 
+var blacklistedMoves = {
+	/* These moves are bad in 1v1, with an false high base power */
+	"Focus Punch": 1,
+	"Explosion": 1,
+	"Self-Destruct": 1,
+	"Dream Eater": 1,
+	"Last Resort": 1
+};
+
 module.exports = {
 	gen6_get_mux: function (typeA, typesB, not_inmune, inverse) {
 		var mux = 1;
@@ -77,7 +86,8 @@ module.exports = {
 					else dataMove.basePower = 102;
 				}
 				if (typeof dataMove.basePower !== "number" || !dataMove.basePower) continue;
-				if (dataMove.name in {"Focus Punch": 1, "Explosion": 1, "Self-Destruct": 1, "Dream Eater": 1}) continue;
+				if (dataMove.name in blacklistedMoves) continue;
+				if (dataMove.name === "Hyperspace Fury" && dataPoke.name !== 'Hoopa-Unbound') continue;
 				if (dataMove.category === "Special") {
 					basePower = dataMove.basePower * actPoke.stats['spa'];
 				} else {
@@ -134,7 +144,7 @@ module.exports = {
 				else dataMove.basePower = 102;
 			}
 			if (typeof dataMove.basePower !== "number" || !dataMove.basePower) continue;
-			if (dataMove.name in {"Focus Punch": 1, "Explosion": 1, "Self-Destruct": 1, "Dream Eater": 1}) continue;
+			if (dataMove.name in blacklistedMoves) continue;
 			switch (req.active[0].baseAbility) {
 				case 'Aerilate':
 					if (dataMove.type === "Normal") dataMove.type = "Flying";
@@ -147,6 +157,7 @@ module.exports = {
 					break;
 			}
 			if (dataMove.name === "Judgment") dataMove.type = data1.types[0];
+			if (dataMove.name === "Hyperspace Fury" && data1.name !== 'Hoopa-Unbound') continue;
 			var not_inmune = false;
 			if (req.active[0].baseAbility === "Scrappy" && dataMove.type in {"Normal": 1, "Fighting": 1}) not_inmune = true;
 			if (dataMove.category === "Special") {
@@ -176,6 +187,14 @@ module.exports = {
 			}
 			if (dataMove.category === "Special" && data.statusData.foe.side['Light Screen']) basePower *= 0.5;
 			if (dataMove.category === "Physical" && data.statusData.foe.side['Reflect']) basePower *= 0.5;
+			if (data.weather === 'raindance' || data.weather === 'primordialsea') {
+				if (dataMove.type === "Fire") basePower *= 0.5;
+				if (dataMove.type === "Water") basePower *= 1.5;
+			}
+			if (data.weather === 'sunnyday' || data.weather === 'desolateland') {
+				if (dataMove.type === "Fire") basePower *= 1.5;
+				if (dataMove.type === "Water") basePower *= 0.5;
+			}
 			viableMoves.push({id: i + 1, power: basePower});
 		}
 		viableMoves = viableMoves.randomize();
