@@ -15,7 +15,7 @@ exports.commands = {
 	credits: 'about',
 	bot: 'about',
 	about: function (arg, by, room, cmd) {
-		var text = this.trad('about') + " (https://github.com/Ecuacion/Pokemon-Showdown-Node-Bot)";
+		var text = this.trad('about') + " (https://github.com/Ecuacion/Espaol-Bot)";
 		if (!this.isRanked('#')) {
 			this.pmReply(text);
 		} else {
