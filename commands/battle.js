@@ -89,7 +89,7 @@ exports.commands = {
 			if (Features['battle'].LadderManager.stop()) this.reply(this.trad('stop'));
 			return;
 		}
-		var format = toId(arg);
+		var format = Tools.parseAliases(arg);
 		if (!Formats[format] || !Formats[format].ladder) return this.reply(this.trad('e21') + ' ' + format + ' ' + this.trad('e22'));
 		if (Formats[format].team && !Features['battle'].TeamBuilder.hasTeam(format)) return this.reply(this.trad('e31') + ' ' + format + '. ' + this.trad('e32'));
 		if (Features['battle'].LadderManager.start(format)) this.reply(this.trad('start') + ' ' + format);
@@ -106,7 +106,7 @@ exports.commands = {
 		}
 		if (args.length < 2) return this.reply(this.trad('e11') + ': ' + this.cmdToken + cmd + " " + this.trad('e12'));
 		var format = Tools.parseAliases(args[1]);
-		if (!Formats[format] || !Formats[format].chall) return this.reply(this.trad('e21') + ' ' + format + ' ' + this.trad('e22'));
+		if (!format || !Formats[format] || !Formats[format].chall) return this.reply(this.trad('e21') + ' "' + format + '" ' + this.trad('e22'));
 		if (Formats[format].team && !Features['battle'].TeamBuilder.hasTeam(format)) return this.reply(this.trad('e31') + ' ' + format + '. ' + this.trad('e32'));
 		var cmds = [];
 		var team = Features['battle'].TeamBuilder.getTeam(format);

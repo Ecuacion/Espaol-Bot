@@ -10,3 +10,4 @@ En caso de un error o sugerencia reportar aquí: [https://github.com/Ecuacion/Es
 Contribuidores: 
  - [Ecuacion](https://github.com/Ecuacion/)
  - [xJoelituh](https://github.com/xJoelituh/)
+ 
