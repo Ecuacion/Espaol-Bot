@@ -1,4 +1,4 @@
-/*
+Ôªø/*
 	Commands for Moderation Feature
 */
 
@@ -294,7 +294,7 @@ exports.commands = {
 	viewzerotol: 'zerotol',
 	zerotol: function (arg, by, room, cmd) {
 		if (!arg) {
-			return this.pmReply('Actualmente **' + (getZeroTol(toId(by)) ? 'SÕ' : 'NO') + '** est·s en la lista de tolerancia cero.');
+			return this.pmReply('Actualmente **' + (getZeroTol(toId(by)) ? 'S√ç' : 'NO') + '** est√°s en la lista de tolerancia cero.');
 		}
 		if (!this.isRoomRanked('salastaff', '%')) return false;
 		var ztLevels, defaultLevel, aliases;
