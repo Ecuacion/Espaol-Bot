@@ -1,4 +1,4 @@
-exports.trad = {
+var tradObject = exports.trad = {
 	"ability": [
 		{"en": "Water Absorb", "es": "Absor. agua"},
 		{"en": "Volt Absorb", "es": "Absor. elec."},
@@ -1396,6 +1396,32 @@ exports.trad = {
 	]
 };
 
+//tradObject
+
+function normalize_init () {
+	var str1 = "ÃÀÁÄÂÈÉËÊÌÍÏÎÒÓÖÔÙÚÜÛãàáäâèéëêìíïîòóöôùúüûÑÇç"; 
+	var str2 = "AAAAAEEEEIIIIOOOOUUUUaaaaaeeeeiiiioooouuuuñcc";
+	var map = {};
+	for (var i = 0; i < str1.length; i++) {
+		map[str1.charAt(i)] = str2.charAt(i);
+	}
+	return map;
+}
+
+var normalObj = normalize_init();
+function normalize (str) {
+	var res = '';
+	for (var i = 0; i < str.length; i++) {
+		res += normalObj[str.charAt(i)] ? normalObj[str.charAt(i)] : str.charAt(i);
+	}
+	return res;
+}
+
+function toWord (str) {
+	if (!str) return '';
+	return normalize(str).toLowerCase().replace(/[^a-z0-9ñ]/g, '');
+}
+
 exports.commands = {
 	trad: function(arg, by, room, cmd) {
 		try {
@@ -1405,16 +1431,16 @@ exports.commands = {
 			return this.restrictReply('Se ha encontrado un error: Vuelve a probar en unos segundos.', 'pokemon');
 		}
 		
-		var word = toId(arg);
+		var word = toWord(arg);
 		if (word === "") return this.restrictReply("¿Que tengo que traducir?", 'pokemon');
-		if (aliases[word]) word = toId(aliases[word]);
+		if (aliases[word]) word = toWord(aliases[word]);
 		
 		var results = [];
 		
 		for (var i in trad) {
 			for (var j in trad[i]) {
-				if (toId(trad[i][j].es) === word) results.push({"trad": trad[i][j].en, "cat": i});
-				if (toId(trad[i][j].en) === word) results.push({"trad": trad[i][j].es, "cat": i});
+				if (toWord(trad[i][j].es) === word) results.push({"trad": trad[i][j].en, "cat": i});
+				if (toWord(trad[i][j].en) === word) results.push({"trad": trad[i][j].es, "cat": i});
 			}
 		}
 		
