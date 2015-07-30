@@ -1,4 +1,4 @@
-﻿
+
 /* -------------- Hangman words ----------------*/
 
 exports.hangmanWords = {
