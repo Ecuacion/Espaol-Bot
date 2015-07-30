@@ -356,7 +356,7 @@ function parseChat (room, time, by, message) {
 	if (modSettings['multiple'] !== 0) {
 		if (infractions.length >= 2) {
 			pointVal = totalPointVal;
-			muteMessage = ', ' + trad('mult', room) + ': ' + infractions.join(", ");
+			muteMessage = ', ' + trad('automod', room) + ': ' + infractions.join(", ");
 		}
 	}
 
@@ -390,7 +390,7 @@ function parseChat (room, time, by, message) {
 		if (cmd  === 'roomban' && !isBotRanked(room, '@')) cmd = 'hourmute'; //Bot is not a moderator
 		if ((room in Config.privateRooms) && cmd === 'warn') cmd = 'mute'; //can't warn in private rooms
 
-		Bot.say(room, '/' + cmd + ' ' + user + muteMessage + '. Reglas: http://bit.ly/1abNG5E');
+		Bot.say(room, '/' + cmd + ' ' + user + muteMessage + '. ' + ((room in {'espaol': 1, 'eventos': 1}) ? 'Reglas: http://bit.ly/1abNG5E' : ''));
 	}
 }
 
