@@ -925,7 +925,7 @@ exports.commands = {
 			if (!Settings.settings['modexception']) Settings.settings['modexception'] = {};
 			Settings.settings['modexception'][tarRoom] = rank;
 			Settings.save();
-			this.reply("Ahora los usuarios de rango " + rank + " o superior están exectos de la moderacion automática para la sala " + tarRoom);
+			this.reply("Ahora los usuarios de rango " + rank + " o superior están exentos de la moderacion automática para la sala " + tarRoom);
 		} else {
 			this.reply("El rango \"" + rank + "\" no existe.");
 		}
