@@ -125,7 +125,9 @@ function getServersAds (text) {
 
 function parseChat (room, time, by, message) {
 	var user = toId(by);
-	if (Tools.equalOrHigherRank(by, Config.moderation.modException)) return;
+	var rankExcepted = Config.moderation.modException;
+	if (Settings.settings['modexception'] && Settings.settings['modexception'][room]) rankExcepted = Settings.settings['modexception'][room];
+	if (Tools.equalOrHigherRank(by, rankExcepted)) return;
 	var ban = isBanned(room, by);
 	if (ban) Bot.say(room, '/roomban ' + by + ', ' + trad('ab', room) + ((ban === '#range') ? ' (RegExp)' : ''));
 

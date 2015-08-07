@@ -908,6 +908,29 @@ exports.commands = {
 	* Mod Settings
 	***************************/
 
+	modexception: function (arg, by, room, cmd) {
+		if (!this.isRanked('#')) return false;
+		var tarRoom = room;
+		var targetObj = Tools.getTargetRoom(arg);
+		var textHelper = '';
+		if (targetObj && this.isExcepted) {
+			arg = targetObj.arg;
+			tarRoom = targetObj.room;
+			textHelper = ' (' + tarRoom + ')';
+		}
+		if (!Bot.rooms[tarRoom] || Bot.rooms[tarRoom].type !== 'chat') return this.reply("Este comando solo esta disponible para las salas de chat" + textHelper);
+		if (tarRoom === 'salastaff') tarRoom = 'espaol';
+		var rank = arg.trim();
+		if (Config.ranks.indexOf(rank) >= 0) {
+			if (!Settings.settings['modexception']) Settings.settings['modexception'] = {};
+			Settings.settings['modexception'][tarRoom] = rank;
+			Settings.save();
+			this.reply("Ahora los usuarios de rango " + rank + " o superior están exectos de la moderacion automática para la sala " + tarRoom);
+		} else {
+			this.reply("El rango \"" + rank + "\" no existe.");
+		}
+	},
+
 	setmod: 'mod',
 	modset: 'mod',
 	modsettings: 'mod',
