@@ -423,6 +423,31 @@
 			'link': 'Frases inapropiadas',
 			'err': 'Error: no se puede subir la lista de frases inapropiadas a hastebin'
 		},
+		warnword: {
+			'notchat': 'Este comando solo está disponible para las salas de chat',
+			'phrase': 'La frase',
+			'already': 'ya estaba en la lista de auto-warn.',
+			'ban': 'está en la lista de auto-warn a partir de ahora.'
+		},
+		unwarnword: {
+			'notchat': 'Este comando solo está disponible para las salas de chat',
+			'phrase': 'La frase',
+			'not': 'no estaba en la lista de auto-warn.',
+			'unban': 'ha dejado de suponer auto-warn.'
+		},
+		viewwarnwords: {
+			'notchat': 'Este comando solo está disponible para las salas de chat',
+			'in': 'en',
+			'globally': 'globalmente',
+			'phrase': 'La frase',
+			'nowords': 'No hay frases en la lista de auto-warn de esta sala',
+			'curr': '',
+			'not': 'No',
+			'banned': 'está en la lista de auto-warn',
+			'list': 'Las siguietes frases están en la lista de auto-warn',
+			'link': 'Frases Warn',
+			'err': 'Error: no se puede subir la lista de frases warn a hastebin'
+		},
 		joinphrase: {
 			'notchat': 'Este comando solo está disponible para las salas de chat',
 			'ae': 'Ls frases de entrada ya estaban activadas en esta sala',

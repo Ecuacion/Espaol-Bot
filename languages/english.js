@@ -423,6 +423,31 @@ exports.translations = {
 			'link': 'Inappropriate phrases',
 			'err': 'upload failure, could not upload inappropriate phrases to hastebin'
 		},
+		warnword: {
+			'notchat': 'This command is only available for chat rooms',
+			'phrase': 'Phrase',
+			'already': 'is already banned.',
+			'ban': 'is now banned.'
+		},
+		unwarnword: {
+			'notchat': 'This command is only available for chat rooms',
+			'phrase': 'Phrase',
+			'not': 'is not currently banned.',
+			'unban': 'is no longer banned.'
+		},
+		viewwarnwords: {
+			'notchat': 'This command is only available for chat rooms',
+			'in': 'in',
+			'globally': 'globally',
+			'phrase': 'Phrase',
+			'nowords': 'No phrases are banned in this room.',
+			'curr': 'is currently',
+			'not': 'not',
+			'banned': 'banned',
+			'list': 'The following phrases are banned',
+			'link': 'Banned phrases',
+			'err': 'upload failure, could not upload banwords to hastebin'
+		},
 		joinphrase: {
 			'notchat': 'This command is only available for chat rooms',
 			'ae': 'Join phrases already enabled for this room',

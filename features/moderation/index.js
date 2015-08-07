@@ -315,6 +315,23 @@ function parseChat (room, time, by, message) {
 	* Banned Words
 	*****************************/
 
+	if (modSettings['warnwords'] !== 0) {
+		var warnphraseSettings = Settings.settings['warnphrases'];
+		var warnPhrases = !!warnphraseSettings ? (Object.keys(warnphraseSettings[room] || {})).concat(Object.keys(warnphraseSettings['global'] || {})) : [];
+		var msghop = " " + msg.toLowerCase() + " ";
+		for (var i = 0; i < warnPhrases.length; i++) {
+			if (msghop.indexOf(" " + warnPhrases[i] + " ") > -1) {
+				infractions.push("Frase no permitida");
+				totalPointVal += 1;
+				if (pointVal < 1) {
+					pointVal = 1;
+					muteMessage = ', ' + trad('automod', room) + ': Su mensaje contiene una frase que incita el shitposting, por lo que no está permitida';
+				}
+				break;
+			}
+		}
+	}
+
 	if (modSettings['inapropiate'] !== 0) {
 		var inapropiatephraseSettings = Settings.settings['inapropiatephrases'];
 		var inapropiatePhrases = !!inapropiatephraseSettings ? (Object.keys(inapropiatephraseSettings[room] || {})).concat(Object.keys(inapropiatephraseSettings['global'] || {})) : [];

@@ -650,6 +650,132 @@ exports.commands = {
 		}.bind(this));
 	},
 
+	/*---------------------*/
+	ww: 'warnword',
+	warnphrase: 'warnword',
+	warnword: function (arg, user, room) {
+		if (!this.can('banword')) return;
+		if (!arg) return false;
+
+		var tarRoom;
+		if (this.roomType === 'pm') {
+			if (!this.isRanked('~')) return false;
+			tarRoom = 'global';
+		} else {
+			tarRoom = room;
+		}
+
+		var targetObj = Tools.getTargetRoom(arg);
+		var textHelper = '';
+		if (targetObj && this.isExcepted) {
+			arg = targetObj.arg;
+			tarRoom = targetObj.room;
+			textHelper = ' (' + tarRoom + ')';
+		}
+
+		if (tarRoom !== 'global' && (!Bot.rooms[tarRoom] || Bot.rooms[tarRoom].type !== 'chat')) return this.reply(this.trad('notchat') + textHelper);
+		if (tarRoom === 'salastaff') tarRoom = 'espaol';
+		arg = arg.trim().toLowerCase();
+
+		var bannedPhrases = Settings.settings['warnphrases'] ? Settings.settings['warnphrases'][tarRoom] : null;
+		if (!bannedPhrases) {
+			if (bannedPhrases === null) Settings.settings['warnphrases'] = {};
+			bannedPhrases = (Settings.settings['warnphrases'][tarRoom] = {});
+		} else if (bannedPhrases[arg]) {
+			return this.reply(this.trad('phrase') + ' "' + arg + '" ' + this.trad('already') + textHelper);
+		}
+		bannedPhrases[arg] = 1;
+
+		Settings.save();
+		this.reply(this.trad('phrase') + ' "' + arg + '" ' + this.trad('ban') + textHelper);
+	},
+
+	unww: 'unwarnword',
+	unwarnphrase: 'unwarnword',
+	unwarnword: function (arg, user, room) {
+		if (!this.can('banword')) return;
+		if (!arg) return false;
+
+		var tarRoom;
+		if (this.roomType === 'pm') {
+			if (!this.isRanked('~')) return false;
+			tarRoom = 'global';
+		} else {
+			tarRoom = room;
+		}
+
+		var targetObj = Tools.getTargetRoom(arg);
+		var textHelper = '';
+		if (targetObj && this.isExcepted) {
+			arg = targetObj.arg;
+			tarRoom = targetObj.room;
+			textHelper = ' (' + tarRoom + ')';
+		}
+
+		if (tarRoom !== 'global' && (!Bot.rooms[tarRoom] || Bot.rooms[tarRoom].type !== 'chat')) return this.reply(this.trad('notchat') + textHelper);
+		if (tarRoom === 'salastaff') tarRoom = 'espaol';
+		arg = arg.trim().toLowerCase();
+
+		if (!Settings.settings['warnphrases']) return this.reply(this.trad('phrase') + ' "' + arg + '" ' + this.trad('not') + textHelper);
+
+		var bannedPhrases = Settings.settings['warnphrases'][tarRoom];
+		if (!bannedPhrases || !bannedPhrases[arg]) return this.reply(this.trad('phrase') + ' "' + arg + '" ' + this.trad('not') + textHelper);
+
+		delete bannedPhrases[arg];
+		if (Object.isEmpty(bannedPhrases)) {
+			delete Settings.settings['warnphrases'][tarRoom];
+			if (Object.isEmpty(Settings.settings['warnphrases'])) delete Settings.settings['warnphrases'];
+		}
+
+		Settings.save();
+		this.reply(this.trad('phrase') + ' "' + arg + '" ' + this.trad('unban') + textHelper);
+	},
+
+	viewwarnphrases: 'viewwarnwords',
+	vww: 'viewwarnwords',
+	viewwarnwords: function (arg, user, room) {
+		if (!this.can('banword')) return;
+		var tarRoom;
+		var text = '';
+		var bannedFrom = '';
+		if (this.roomType === 'pm') {
+			if (!this.isRanked('~')) return false;
+			tarRoom = 'global';
+		} else {
+			tarRoom = room;
+		}
+		var targetObj = Tools.getTargetRoom(arg);
+		var textHelper = '';
+		if (targetObj && this.isExcepted) {
+			arg = targetObj.arg;
+			tarRoom = targetObj.room;
+			textHelper = ' (' + tarRoom + ')';
+		}
+
+		if (tarRoom !== 'global' && (!Bot.rooms[tarRoom] || Bot.rooms[tarRoom].type !== 'chat')) return this.reply(this.trad('notchat') + textHelper);
+		if (tarRoom === 'salastaff') tarRoom = 'espaol';
+
+		if (tarRoom === 'global') bannedFrom += this.trad('globally');
+		else bannedFrom += this.trad('in') + ' ' + tarRoom;
+
+		if (!Settings.settings['warnphrases']) return this.reply(this.trad('nowords') + textHelper);
+		var bannedPhrases = Settings.settings['warnphrases'][tarRoom];
+		if (!bannedPhrases) return this.reply(this.trad('nowords') + textHelper);
+
+		if (arg.length) {
+			return this.reply(this.trad('phrase') + ' "' + arg + '" ' + this.trad('curr') + ' ' + (bannedPhrases[arg] ? '' : (this.trad('not') + ' ')) + this.trad('banned') + ' ' + bannedFrom + '.');
+		}
+
+		var banList = Object.keys(bannedPhrases);
+		if (!banList.length) return this.reply(this.trad('nowords') + textHelper);
+
+		Tools.uploadToHastebin(this.trad('list') + ' ' + bannedFrom + ':\n\n' + banList.join('\n'), function (r, link) {
+			if (r) return this.pmReply(this.trad('link') + ' ' + bannedFrom + ': ' + link);
+			else this.pmReply(this.trad('err'));
+		}.bind(this));
+	},
+	/*------------------*/
+
 	/**************************
 	* Join Phrases
 	***************************/
@@ -802,6 +928,7 @@ exports.commands = {
 			'spam': 1,
 			'bannedwords': 1,
 			'inapropiate': 1,
+			'warnwords': 1,
 			'spoiler': 1,
 			'youtube': 1,
 			'psservers': 1,
