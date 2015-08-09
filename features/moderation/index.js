@@ -327,7 +327,7 @@ function parseChat (room, time, by, message) {
 				totalPointVal += 1;
 				if (pointVal < 1) {
 					pointVal = 1;
-					muteMessage = ', ' + trad('automod', room) + ': Su mensaje contiene una frase que incita el shitposting, por lo que no está permitida';
+					muteMessage = ', ' + trad('automod', room) + ': Su mensaje contiene una frase o emoticono no permitido';
 				}
 				break;
 			}
