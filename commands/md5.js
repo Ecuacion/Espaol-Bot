@@ -23,6 +23,6 @@ exports.commands = {
 		}
 		var pokemon = Object.keys(pokedex);
 		var hash = getHash(toId(arg || by), pokemon.length);
-		this.restrictReply(pokedex[pokemon[hash]].species);
+		this.restrictReply(pokedex[pokemon[hash]].species, 'pokemon');
 	}
 };
