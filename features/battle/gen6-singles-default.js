@@ -276,7 +276,8 @@ module.exports = {
 				if (req.side.pokemon[0].item && req.side.pokemon[0].item === "Power Herb") solarFlag = true;
 				if (!solarFlag) continue;
 			}
-
+			if (dataMove.type === "Fire" && data.weather && toId(data.weather) === "primordialsea") continue;
+			if (dataMove.type === "Water" && data.weather && toId(data.weather) === "desolateland") continue;
 			if (dataMove.type === "Grass" && data.statusData.foe.pokemon[0].ability && data.statusData.foe.pokemon[0].ability === "Sap Sipper") continue;
 
 			if (dataMove.name === "Fake Out" && data.statusData.self.pokemon[0]['lastMove']) continue;
@@ -338,6 +339,8 @@ module.exports = {
 				if (req.side.pokemon[0].item && req.side.pokemon[0].item === "Power Herb") solarFlag = true;
 				if (!solarFlag) continue;
 			}
+			if (dataMove.type === "Fire" && data.weather && toId(data.weather) === "primordialsea") continue;
+			if (dataMove.type === "Water" && data.weather && toId(data.weather) === "desolateland") continue;
 			if (dataMove.type === "Grass" && data.statusData.foe.pokemon[0].ability && data.statusData.foe.pokemon[0].ability === "Sap Sipper") continue;
 			if (dataMove.name === "Fake Out" && data.statusData.self.pokemon[0]['lastMove']) continue;
 			if (this.gen6_get_mux(dataMove.type, data2.types, not_inmune, inverse) === 0) continue;
@@ -577,6 +580,8 @@ module.exports = {
 				}
 				if (isLastPoke) continue;
 			}
+			if (dataMove.type === "Fire" && data.weather && toId(data.weather) === "primordialsea") continue;
+			if (dataMove.type === "Water" && data.weather && toId(data.weather) === "desolateland") continue;
 			if (dataMove.type === "Grass" && data.statusData.foe.pokemon[0].ability && data.statusData.foe.pokemon[0].ability === "Sap Sipper") continue;
 			if (this.gen6_get_mux(dataMove.type, data2.types, not_inmune, inverse) === 0) continue;
 			if (dataMove.type === "Ground" && data.statusData.foe.pokemon[0]['item'] && data.statusData.foe.pokemon[0]['item'] === "Air Balloon") continue;
