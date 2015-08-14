@@ -1,5 +1,5 @@
 ﻿/*
-	Tournaments Manager Feature
+	Tournaments Manager
 */
 
 const ladderDataFile = './data/tourladder.json';
@@ -121,7 +121,6 @@ var update_table = exports.update_table = function (room) {
 	if (!Config.tourLadder || !Config.tourLadder.id) return;
 	var jsonData = {
 		id: Config.tourLadder.id,
-		description: 'Ranking de Torneos',
 		files: {},
 		public: true
 	};
