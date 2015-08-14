@@ -54,6 +54,13 @@ var cleanData = exports.cleanData = function () {
 	}
 };
 
+function comprobarAbuso (arr, n, a) {
+	var counter = 0;
+	for (var i = arr.length - 1, o = n; i >= 0 && o > 0; i--, o--) counter += arr[i];
+	if (counter >= a) return true;
+	return false;
+}
+
 function isBotRanked (room, rank) {
 	if (!Bot.rooms[room]) return false;
 	var ident = Bot.rooms[room].users[toId(Bot.status.nickName)];
@@ -123,6 +130,12 @@ function getServersAds (text) {
 	return serversAds;
 }
 
+function getArr (data, num) {
+	var res = [];
+	for (var i = 0; i < num; i++) res.push(data);
+	return res;
+}
+
 function parseChat (room, time, by, message) {
 	var user = toId(by);
 	var rankExcepted = Config.moderation.modException;
@@ -151,13 +164,46 @@ function parseChat (room, time, by, message) {
 
 	if (!chatData[room]) chatData[room] = {};
 
-	if (!chatData[room][user]) chatData[room][user] = {times:[], lastMsgs: ['', '', ''], points:0, lastAction:0};
+	if (!chatData[room][user]) chatData[room][user] = {times:[], lastMsgs: ['', '', ''], points:0, lastAction:0, caras: getArr(0, Config.facesAcc || 5), lastMsg:0};
 
 	chatData[room][user].lastMsgs.push(msg);
 	chatData[room][user].lastMsgs.shift();
 
 	chatData[room][user].times.push(time);
+	
+	/* Caras */
+	var numLifts = Math.floor((time - chatData[room][user].lastMsg) / (5 * 60 * 1000));
+	if (numLifts > chatData[room][user].caras.length) numLifts = chatData[room][user].caras.length;
+	for (var caraCounter = 0; caraCounter < numLifts; caraCounter++) {
+		chatData[room][user].caras.push(0);
+		chatData[room][user].caras.shift();
+	}
+	chatData[room][user].lastMsg = time;
 
+	var caras = Tools.getCancerFaces(message);
+	
+	chatData[room][user].caras.push(caras.length);
+	chatData[room][user].caras.shift();
+	
+	var uniCara = false, abusaCara = false;
+	if (caras.length) {
+		for (var x = 0; x < caras.length; x++) {
+			if (caras[x].length > 3) {
+				uniCara = true;
+				break;
+			}
+		}
+		try {
+			if (typeof Config.faceAbuse === "object") {
+				for (x = 0; x < Config.faceAbuse.length; x++) {
+					if (comprobarAbuso(chatData[room][user].caras, Config.faceAbuse[x][1], Config.faceAbuse[x][0])) {
+						abusaCara = true;
+						break;
+					}
+				}
+			}
+		} catch (e) {debug(e.stack);}
+	}
 	/* Moderation */
 
 	if (!Config.moderation.allowmute) return;
@@ -309,6 +355,21 @@ function parseChat (room, time, by, message) {
 					muteMessage = ', ' + trad('automod', room) + ': ' + trad('server', room);
 				}
 				break;
+			}
+		}
+	}
+	
+	/****************************
+	* Caras sida
+	*****************************/
+	
+	if (modSettings['carav'] !== 0) {
+		if (abusaCara || uniCara) {
+			infractions.push("Abuso de caritas");
+			totalPointVal += 1;
+			if (pointVal < 1) {
+				pointVal = 1;
+				muteMessage = ', ' + trad('automod', room) + ': Abuso de caritas / emoticonos molestos';
 			}
 		}
 	}

@@ -128,6 +128,72 @@ exports.getTargetRoom = function (arg) {
 	return {arg: newArg, room: target};
 };
 
+exports.getCancerFaces = function (msg) {
+	if (!msg) return 0;
+	var eyes = {':': 1, ';': 1};
+	var msglow = msg.toLowerCase();
+	var faces = [];
+	var gChar = function (str, n) {
+		if (n < 0 || n > str.length) return '';
+		else return str.charAt(n);
+	};
+	/* Caras sida tipo :v, v: */
+	var parseAndCount = function (msg, l) {
+		var c = [], a = '';
+		for (var k = 0; k < msg.length; k++) {
+			a = gChar(msg, k);
+			if (a === l) {
+				if (gChar(msg, k - 1) in eyes) {
+					c.push(gChar(msg, k - 1) + a);
+				} else if (gChar(msg, k + 1) in eyes) {
+					if (toId(gChar(msg, k - 1)) && gChar(msg, k + 2) === ' ') continue;
+					else c.push(a + gChar(msg, k + 1));
+				} else if (gChar(msg, k - 1) !== ' ' && gChar(msg, k - 2) in eyes && !toId(gChar(msg, k - 1))) {
+					c.push(gChar(msg, k - 2) + gChar(msg, k - 1) + a);
+				} else if (gChar(msg, k + 1) !== ' ' && gChar(msg, k + 2) in eyes && !toId(gChar(msg, k + 1))) {
+					c.push(a + gChar(msg, k + 1) + gChar(msg, k + 2));
+				}
+			}
+		}
+		return c;
+	};
+	var cancerChars = ['v'];
+	for (var i = 0; i < cancerChars.length; i++) faces = faces.concat(parseAndCount(msglow, cancerChars[i]));
+	/* caras resultado de unicode, ejemplo: :\/ */
+	var countUnicode = function (msg) {
+		var c = []; a = '', t = '';
+		var openChars = {'\\': 1, '\u2572': 1};
+		var midOpenChars = {'/': 1, '_': 1, '\u2571': 1};
+		var midCloseChars = {'\\': 1, '_': 1, '\u2572': 1};
+		var closeChars = {'/': 1, '\u2571': 1};
+		for (var k = 0; k < msg.length; k++) {
+			a = gChar(msg, k);
+			if (a in eyes) {
+				t = '';
+				if (gChar(msg, k + 1) in openChars && gChar(msg, k + 2) in midOpenChars) {
+					for (var j = k; j < msg.length; j++) {
+						t += gChar(msg, j);
+						if (gChar(msg, j) === '' || gChar(msg, j) === ' ') break;
+						if (gChar(msg, j) in closeChars) break;
+					}
+					c.push(t);
+				} else if (gChar(msg, k - 1) in closeChars && gChar(msg, k - 2) in midCloseChars) {
+					for (var j = k; j >= 0; j--) {
+						t = gChar(msg, j) + t;
+						if (gChar(msg, j) === '' || gChar(msg, j) === ' ') break;
+						if (gChar(msg, j) in openChars) break;
+					}
+					c.push(t);
+				}
+			}
+		}
+		return c;
+	};
+	faces = faces.concat(countUnicode(msglow));
+	/* Resultado total */
+	return faces;
+};
+
 exports.equalOrHigherRank = function (userIdentity, rank) {
 	if (rank === ' ') return true;
 	if (!Config.ranks) Config.ranks = [];
