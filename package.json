@@ -25,6 +25,7 @@
   "dependencies": {
     "sugar": "1.4.1",
     "colors": "1.0.3",
+	"github": "0.2.4",
 	"node-ps-client": "0.2.1"
   },
   "devDependencies": {
