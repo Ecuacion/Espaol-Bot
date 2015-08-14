@@ -134,7 +134,7 @@ var update_table = exports.update_table = function (room) {
 			error("Resquest error uploading ladder data for room " + room);
 			return;
 		}
-		debug("Uploaded tournament data for room " + room);
+		monitor("Uploaded tournament data for room " + room);
 	});
 }
 

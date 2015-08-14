@@ -7,10 +7,8 @@ exports.commands = {
 		Features['tourladder'].update_table(tarRoom);
 		this.reply("La tabla de puntuaciones para la sala " + tarRoom + " se actualizará en unos segundos");
 	},
-	tourladder: 'ranking',
 	rank: 'ranking',
 	ranking: function () {
-		if (this.cmd === 'tourladder') return this.restrictReply("Ranking de torneos: https://gist.github.com/Ecuacion/01d357e2fec0413a09d4", "info");
 		var args = this.arg.split(',');
 		var user = toId(args[1] || this.by);
 		var room = toRoomid(args[0]);
