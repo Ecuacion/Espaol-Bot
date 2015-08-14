@@ -12,8 +12,12 @@ exports.commands = {
 	ranking: function () {
 		if (this.cmd === 'tourladder') return this.restrictReply("Ranking de torneos: https://gist.github.com/Ecuacion/01d357e2fec0413a09d4", "info");
 		var args = this.arg.split(',');
-		var user = toId(args[0] || this.by);
-		var room = toRoomid(args[1] || this.room);
+		var user = toId(args[1] || this.by);
+		var room = toRoomid(args[0]);
+		if (!room) {
+			if (this.roomType === 'pm') return this.pmReply("Debes especificar una sala. Uso correcto: " + this.cmdToken + this.cmd + " [sala], (usuario)");
+			room = this.room;
+		}
 		var name = user, points = 0, wins = 0, finals = 0, tours = 0;
 		if (Features['tourladder'].ladder[room] && Features['tourladder'].ladder[room][user]) {
 			name = Features['tourladder'].ladder[room][user].name;
