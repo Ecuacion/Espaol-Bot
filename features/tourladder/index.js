@@ -92,6 +92,8 @@ var parseTourTree = function(tree) {
 };
 
 function semiLowerCase (txt) {
+	if (!txt) return '';
+	if (toId(txt) === 'espaol') return 'Español';
 	return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
 }
 
@@ -172,16 +174,12 @@ exports.parse = function (room, message, isIntro, spl) {
 				}
 				var results = parseTourTree(tourData[room].bracketData.rootNode);
 				var winner = toId(tourData[room].results[0][0]);
-				var finalists = [winner];
-				var f = 0, second = '';
-				for (var j in results) {
-					if (toId(j) === winner) continue;
-					if (results[j] > f) {
-						second = toId(j);
-						f = results[j];
+				var finalists = [];
+				if (tourData[room].bracketData.rootNode.children) {
+					for (var f = 0; f < tourData[room].bracketData.rootNode.children.length; f++) {
+						if (tourData[room].bracketData.rootNode.children[f].team) finalists.push(toId(tourData[room].bracketData.rootNode.children[f].team));
 					}
 				}
-				if (second) finalists.push(second);
 				var tarRoom = room;
 				for (var k in results) {
 					addPoints(room, toId(k), results[k], !!(finalists.indexOf(toId(k)) >= 0), !!(winner === toId(k)), k);
