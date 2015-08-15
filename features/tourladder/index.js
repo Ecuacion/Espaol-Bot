@@ -7,10 +7,6 @@ const ladderDataFile = './data/tourladder.json';
 exports.id = 'tourladder';
 exports.desc = 'Tournaments ladder';
 
-var GitHubApi = require("github");
-var GitHubObj = new GitHubApi({version: "3.0.0"});
-GitHubObj.authenticate({type: 'oauth', token: Config.tourLadder.token});
-
 var tourData = exports.tourData = {};
 var ladder = exports.ladder = {};
 
@@ -130,7 +126,8 @@ var update_table = exports.update_table = function (room) {
 	jsonData.files[filename] = {
 		"content": get_table(room)
 	};
-	GitHubObj.gists.edit(jsonData, function (err, res) {
+	GitHubApi.authenticate({type: 'oauth', token: Config.tourLadder.token});
+	GitHubApi.gists.edit(jsonData, function (err, res) {
 		if (err) {
 			errlog(err.stack);
 			error("Resquest error uploading ladder data for room " + room);
