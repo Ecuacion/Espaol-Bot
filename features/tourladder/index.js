@@ -93,23 +93,39 @@ function semiLowerCase (txt) {
 	return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
 }
 
+funcion get_ratio (tours, wins, finals) {
+	finals -= wins;
+	var r = wins + (finals / 2);
+	var m = r / tours;
+	m = math.floor(m * 100) / 100;
+	var s = m.toString();
+	s = s.split('.');
+	if (!s[1]) s[1] = '00';
+	else if (s[1].length < 2) s[1] += '0';
+	return s.join('.');
+}
+
 function get_table (room) {
 	var table = '';
 	var dt = new Date();
 	table += '# Ranking de Torneos' + (room === '-lb' ? ' - Leaderboards' : '') + '\n\n';
-	table += 'A continuación aparecen los 100 primeros clasificados en el ' + (room === '-lb' ? '**Ranking del torneo LeaderBoards' : '**Ranking de Torneos Elimination de la Sala ' + semiLowerCase(room)) + '**. Están ordenados por puntuación (un punto por ronda ganada + 3 extra para el ganador del torneo) pero también se muestra el número total de victorias (numero de veces que ganó un torneo) y las veces que el usuario llegó a la final. Nota: Los datos tienen una antigüedad determinada por lo que podrían no ser representativos si el ranking fue reiniciado hace poco.\n\n';
+	table += 'A continuación aparecen los 100 primeros clasificados en el ' + (room === '-lb' ? '**Ranking del torneo LeaderBoards' : '**Ranking de Torneos Elimination de la Sala ' + semiLowerCase(room)) + '**. Están ordenados por torneos ganados, finales y puntuacion (en caso de mismon tours ganados). Nota: Los datos tienen una antigüedad determinada por lo que podrían no ser representativos si el ranking fue reiniciado hace poco.\n\n';
 	table += 'Actualizado en: __' + dt.toString() + '__\n\n';
-	table += ' Nº | Nombre | Puntuación | Torneos Jugados | Ganados | Finales |' + '\n';
-	table += ':------|:------------------------|:----------------|:------------------|:---------|:--------|' + '\n';
+	table += ' Nº | Nombre | Ganados | Finales | Jugados | Ratio | Puntuación' + '\n';
+	table += ':------|:------------------------|:----------|:---------|:---------|:--------|:----------------' + '\n';
 	var resultsTable = [];
 	for (var i in ladder[room]) {
 		resultsTable.push(ladder[room][i])
 	}
 	resultsTable.sort(function (a, b) {
-		return b.points - a.points;
+		if (b.wins - a.wins === 0) {
+			if (b.finals - a.finals === 0) {
+				return b.points - a.points;
+			} else return b.finals - a.finals;
+		} else return b.wins - a.wins;
 	});
 	for (var i = 0; i < 100 && i < resultsTable.length; i++) {
-		table += (i + 1).toString() + " | " + resultsTable[i].name + " | " + resultsTable[i].points + " | " + resultsTable[i].tours + " | " + resultsTable[i].wins + " | " + resultsTable[i].finals + " |" + '\n';
+		table += (i + 1).toString() + " | " + resultsTable[i].name + " | "  + resultsTable[i].wins + " | " + resultsTable[i].finals + " | " + resultsTable[i].tours + " |" + get_ratio(resultsTable[i].tours, resultsTable[i].wins, resultsTable[i].finals) + resultsTable[i].points'\n';
 	}
 	table += '\n';
 	return table;
