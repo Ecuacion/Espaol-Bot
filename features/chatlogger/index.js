@@ -7,6 +7,11 @@ exports.desc = 'Save logs of Pokemon Showdown chat rooms';
 
 var logManager = require('./log.js');
 
+var logServer = exports.logServer = null;
+if (Config.logServer) {
+	logServer = exports.logServer = require('./log-server.js');
+}
+
 exports.init = function () {
 	return;
 };
@@ -25,6 +30,9 @@ exports.parse = function (room, message, isIntro, spl) {
 };
 
 exports.destroy = function () {
+	try {
+		if (logServer) logServer.server.close();
+	} catch (e) {}
 	logManager.destroy();
 	if (Features[exports.id]) delete Features[exports.id];
 };
