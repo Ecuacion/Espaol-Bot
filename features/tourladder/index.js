@@ -93,7 +93,7 @@ function semiLowerCase (txt) {
 	return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
 }
 
-funcion get_ratio (tours, wins, finals) {
+function get_ratio (tours, wins, finals) {
 	finals -= wins;
 	var r = wins + (finals / 2);
 	var m = r / tours;
