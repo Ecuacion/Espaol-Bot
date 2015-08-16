@@ -97,7 +97,7 @@ function get_ratio (tours, wins, finals) {
 	finals -= wins;
 	var r = wins + (finals / 2);
 	var m = r / tours;
-	m = math.floor(m * 100) / 100;
+	m = Math.floor(m * 100) / 100;
 	var s = m.toString();
 	s = s.split('.');
 	if (!s[1]) s[1] = '00';
