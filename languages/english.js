@@ -423,31 +423,6 @@ exports.translations = {
 			'link': 'Inappropriate phrases',
 			'err': 'upload failure, could not upload inappropriate phrases to hastebin'
 		},
-		warnword: {
-			'notchat': 'This command is only available for chat rooms',
-			'phrase': 'Phrase',
-			'already': 'is already banned.',
-			'ban': 'is now banned.'
-		},
-		unwarnword: {
-			'notchat': 'This command is only available for chat rooms',
-			'phrase': 'Phrase',
-			'not': 'is not currently banned.',
-			'unban': 'is no longer banned.'
-		},
-		viewwarnwords: {
-			'notchat': 'This command is only available for chat rooms',
-			'in': 'in',
-			'globally': 'globally',
-			'phrase': 'Phrase',
-			'nowords': 'No phrases are banned in this room.',
-			'curr': 'is currently',
-			'not': 'not',
-			'banned': 'banned',
-			'list': 'The following phrases are banned',
-			'link': 'Banned phrases',
-			'err': 'upload failure, could not upload banwords to hastebin'
-		},
 		joinphrase: {
 			'notchat': 'This command is only available for chat rooms',
 			'ae': 'Join phrases already enabled for this room',
@@ -489,6 +464,7 @@ exports.translations = {
 		* Tour Commands
 		*/
 		tourhelp: {'h': 'tour (format), (seconds to start or off), (minutes autodq or off), (max Users or off), (elimination or roundrobin). All arguments are optional.'},
+		tourend: {'err': 'There is not a tournament in this room'},
 		tournament: {
 			'e1': 'requires moderator rank (@) or higher to create tornaments',
 			'e2': 'There is already a tournament in this room',
@@ -498,7 +474,9 @@ exports.translations = {
 			'e5': 'Autodq is not a valid time',
 			'e6': 'Max users number is not valid',
 			'e7': 'Tour type is not valid. Valid types are: elimination, roundrobin',
-			'notstarted': 'Error: the tournament did not start, probably because I have not permission to create tournaments or commands got changed.'
+			'notstarted': 'Error: the tournament did not start, probably because I have not permission to create tournaments or commands got changed.',
+			'param': 'Parameter',
+			'paramhelp': 'not found, valid parameter are'
 		}
 	},
 

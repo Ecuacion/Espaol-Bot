@@ -423,31 +423,6 @@
 			'link': 'Frases inapropiadas',
 			'err': 'Error: no se puede subir la lista de frases inapropiadas a hastebin'
 		},
-		warnword: {
-			'notchat': 'Este comando solo está disponible para las salas de chat',
-			'phrase': 'La frase',
-			'already': 'ya estaba en la lista de auto-warn.',
-			'ban': 'está en la lista de auto-warn a partir de ahora.'
-		},
-		unwarnword: {
-			'notchat': 'Este comando solo está disponible para las salas de chat',
-			'phrase': 'La frase',
-			'not': 'no estaba en la lista de auto-warn.',
-			'unban': 'ha dejado de suponer auto-warn.'
-		},
-		viewwarnwords: {
-			'notchat': 'Este comando solo está disponible para las salas de chat',
-			'in': 'en',
-			'globally': 'globalmente',
-			'phrase': 'La frase',
-			'nowords': 'No hay frases en la lista de auto-warn de esta sala',
-			'curr': '',
-			'not': 'No',
-			'banned': 'está en la lista de auto-warn',
-			'list': 'Las siguietes frases están en la lista de auto-warn',
-			'link': 'Frases Warn',
-			'err': 'Error: no se puede subir la lista de frases warn a hastebin'
-		},
 		joinphrase: {
 			'notchat': 'Este comando solo está disponible para las salas de chat',
 			'ae': 'Ls frases de entrada ya estaban activadas en esta sala',
@@ -489,6 +464,7 @@
 		* Tour Commands
 		*/
 		tourhelp: {'h': 'tour (formato), (segundos para iniciar u off), (minutos para el autodq u off), (máximo número de users u off), (elimination u roundrobin). Todos los argumentos son opcionales.'},
+		tourend: {'err': 'No hay ningún torneo en esta sala'},
 		tournament: {
 			'e1': 'requiere rango de moderador (@) o superior para crear torneos',
 			'e2': 'Ya hay un torneo en esta sala',
@@ -498,7 +474,9 @@
 			'e5': 'El AutoDq no es válido',
 			'e6': 'El máximo numero de users no es válido',
 			'e7': 'El tipo de torneo no es válido. Usa alguno de estos: elimination, roundrobin',
-			'notstarted': 'Error: El torneo no ha empezado, probablemente por un cambio en los permisos o en los comandos'
+			'notstarted': 'Error: El torneo no ha empezado, probablemente por un cambio en los permisos o en los comandos',
+			'param': 'Parámetro',
+			'paramhelp': 'no encontrado, Los parámetros correctos son'
 		}
 	},
 
