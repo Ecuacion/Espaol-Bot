@@ -111,8 +111,8 @@ function get_table (room) {
 	table += '# Ranking de Torneos' + (room === '-lb' ? ' - Leaderboards' : '') + '\n\n';
 	table += 'A continuación aparecen los 100 primeros clasificados en el ' + (room === '-lb' ? '**Ranking del torneo LeaderBoards' : '**Ranking de Torneos Elimination de la Sala ' + semiLowerCase(room)) + '**. Están ordenados por torneos ganados, finales y puntuación (en caso de mismos tours ganados). Nota: Los datos tienen una antigüedad determinada por lo que podrían no ser representativos si el ranking fue reiniciado hace poco.\n\n';
 	table += 'Actualizado en: __' + dt.toString() + '__\n\n';
-	table += ' Nº | Nombre | Ganados | Finales | Jugados | Ratio | Puntuación' + '\n';
-	table += ':------|:------------------------|:----------|:---------|:---------|:--------|:----------------' + '\n';
+	table += ' Nº | Nombre | Torneos Ganados | Finales | Jugados | Puntuación' + '\n';
+	table += ':------|:------------------------|:------------------|:---------|:-----------|:----------------' + '\n';
 	var resultsTable = [];
 	for (var i in ladder[room]) {
 		resultsTable.push(ladder[room][i])
@@ -125,7 +125,7 @@ function get_table (room) {
 		} else return b.wins - a.wins;
 	});
 	for (var i = 0; i < 100 && i < resultsTable.length; i++) {
-		table += (i + 1).toString() + " | " + resultsTable[i].name + " | "  + resultsTable[i].wins + " | " + resultsTable[i].finals + " | " + resultsTable[i].tours + " |" + get_ratio(resultsTable[i].tours, resultsTable[i].wins, resultsTable[i].finals) + " | " + resultsTable[i].points + '\n';
+		table += (i + 1).toString() + " | " + resultsTable[i].name + " | "  + resultsTable[i].wins + " | " + resultsTable[i].finals + " | " + resultsTable[i].tours + " | " + resultsTable[i].points + '\n';
 	}
 	table += '\n';
 	return table;
