@@ -194,7 +194,7 @@ var serverHandle = function (request, response, secToken, setToken) {
 	var acs = SecureMonitor.checkToken(secToken);
 	var htmlHead = {'Content-Type': 'text/html; charset=utf-8'};
 	if (setToken) htmlHead['Set-Cookie'] = 'accesstoken=' + secToken + "; Path=/";
-	var logHead = {'Content-Type': 'text/plain charset=utf-8'};
+	var logHead = {'Content-Type': 'text/plain; charset=utf-8'};
 	if (setToken) logHead['Set-Cookie'] = 'accesstoken=' + secToken + "; Path=/";
 	var roomArr = [];
 	for (var i in acs.rooms) {
