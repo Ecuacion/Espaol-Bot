@@ -105,7 +105,7 @@ function get_ratio (tours, wins, finals) {
 	return s.join('.');
 }
 
-function get_table (room) {
+var get_table = exports.get_table = function (room) {
 	var table = '';
 	var dt = new Date();
 	table += '# Ranking de Torneos' + (room === '-lb' ? ' - Leaderboards' : '') + '\n\n';
@@ -132,6 +132,7 @@ function get_table (room) {
 }
 
 var update_table = exports.update_table = function (room) {
+	return;
 	if (!Config.tourLadder || !Config.tourLadder.id) return;
 	var jsonData = {
 		id: Config.tourLadder.id,

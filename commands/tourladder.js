@@ -4,8 +4,10 @@ exports.commands = {
 		if (!this.isExcepted) return;
 		var tarRoom = toRoomid(this.arg) || this.room;
 		if (Config.tourLadder.rooms.indexOf(tarRoom) < 0) return;
-		Features['tourladder'].update_table(tarRoom);
-		this.reply("La tabla de puntuaciones para la sala " + tarRoom + " se actualizará en unos segundos");
+		Tools.uploadToHastebin(Features['tourladder'].get_table(tarRoom), function (r, link) {
+			if (r) return this.pmReply('Ladder de la sala ' + tarRoom + ': ' + link);
+			else this.pmReply("Error: no se pudieron subir los datos a hastebin");
+		}.bind(this));
 	},
 	rank: 'ranking',
 	ranking: function () {

@@ -1299,5 +1299,5 @@ exports.exportTeam = function (team) {
 	return text;
 };
 
-var GitHubApiLib = require("github");
-global.GitHubApi = new GitHubApiLib({version: "3.0.0"});
+//var GitHubApiLib = require("github");
+//global.GitHubApi = new GitHubApiLib({version: "3.0.0"});
