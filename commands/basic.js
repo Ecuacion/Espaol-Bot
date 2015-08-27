@@ -14,28 +14,18 @@ Settings.addPermissions(['say']);
 exports.commands = {
 	credits: 'about',
 	bot: 'about',
-	about: function (arg, by, room, cmd) {
-		var text = this.trad('about') + " (https://github.com/Ecuacion/Espaol-Bot)";
-		if (!this.isRanked('#')) {
-			this.pmReply(text);
-		} else {
-			this.reply(text);
-		}
+	about: function () {
+		this.restrictReply(this.trad('about') + " (https://github.com/Ecuacion/Espaol-Bot)", 'info');
 	},
 
-	hora: 'time',
 	bottime: 'time',
-	time: function (arg, by, room, cmd) {
+	hora: 'time',
+	time: function () {
 		var f = new Date();
-		var text = "**" + this.trad('time') + ":** __" + f.toString() + "__";
-		if (!this.isRanked('#')) {
-			this.pmReply(text);
-		} else {
-			this.reply(text);
-		}
+		this.restrictReply("**" + this.trad('time') + ":** __" + f.toString() + "__", 'info');
 	},
 
-	uptime: function (arg, by, room, cmd) {
+	uptime: function () {
 		var text = '';
 		text += '**Uptime:** ';
 		var divisors = [52, 7, 24, 60, 60];
@@ -74,11 +64,7 @@ exports.commands = {
 			text += buffer[0];
 			break;
 		}
-		if (!this.isRanked('#')) {
-			this.pmReply(text);
-		} else {
-			this.reply(text);
-		}
+		this.restrictReply(text, 'info');
 	},
 
 	seen: function (arg, by, room, cmd) {
@@ -115,7 +101,7 @@ exports.commands = {
 		this.pmReply(text);
 	},
 
-	say: function (arg, by, room, cmd) {
+	say: function (arg) {
 		if (!arg) return;
 		if (!this.can('say')) return;
 		this.reply(Tools.stripCommands(arg));

@@ -2,7 +2,7 @@
 	Miscellaneous commands
 */
 
-Settings.addPermissions(['pick', 'randomanswer', 'usage', 'help']);
+Settings.addPermissions(['pick', 'randomanswer']);
 
 exports.commands = {
 	choose: 'pick',
@@ -31,13 +31,13 @@ exports.commands = {
 
 	usagestats: 'usage',
 	usage: function (arg, user, room) {
-		this.restrictReply(this.trad('stats') + ': http://www.smogon.com/stats/', 'usage');
+		this.restrictReply(this.trad('stats') + ': http://www.smogon.com/stats/', 'info');
 	},
 
 	guide: 'help',
 	botguide: 'help',
 	help: function (arg, user, room) {
-		this.restrictReply(this.trad('guide') + ': http://ps-salaespanol.proboards.com/thread/1366/gu-del-bot-sala-aminitrabottt', 'help');
+		this.restrictReply(this.trad('guide') + ': http://ps-salaespanol.proboards.com/thread/1366/gu-del-bot-sala-aminitrabottt', 'info');
 	},
 	
 	suspect: function (arg, user, room) {
