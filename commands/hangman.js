@@ -352,23 +352,23 @@ var Ambush = (function () {
 		this.players = {};
 		this.numPlayers = 0;
 		this.started = false;
-		Bot.say(this.room, "Se ha iniciado un juego de **Ambush**! Para inscribirse usad **/me in**");
+		Bot.say(this.room, "Se ha iniciado un juego de **Ambush**! Para inscribirse usad **/me in**. Consiste en eliminar a otros usuarios usando /me fires [usuario]. El juego termina cuando solo quede uno.");
 	};
 	Ambush.prototype.addPlayer = function (player, name) {
-		if (this.players[player]) return false;
+		if (this.players[player] || this.started) return false;
 		this.players[player] = name;
 		this.numPlayers++;
 		return true;
 	};
 	Ambush.prototype.startGame = function () {
-		if (this.numPlayers < 2) return false;
+		if (this.numPlayers < 2 || this.started) return false;
 		this.started = true;
-		Bot.say(this.room, "Comienza el juego de **Ambush**! Consiste en eliminar a otros usuarios usando **/me fires [usuario]**. El juego termina cuando solo quede uno.");
+		Bot.say(this.room, "**Fuego!** Para disparar usad **/me fires [usuario]**");
 		return true;
 	};
 	Ambush.prototype.getPlayers = function () {
 		var cmds = [];
-		var actText = "**" + Object.keys(this.players).length + " usuarios**: " + Object.keys(this.players).join(', ');
+		var actText = "**Ambush (" + Object.keys(this.players).length + " usuarios)**: " + Object.keys(this.players).join(', ');
 		while (actText.length > 290) {
 			cmds.push(actText.substr(0, 290));
 			actText = actText.substr(290);
@@ -377,11 +377,12 @@ var Ambush = (function () {
 		for (var u = 0; u < cmds.length; u++) {
 			cmds[u] = this.room + "|" + cmds[u];
 		}
-		Bot.send(cmds);
+		Bot.send(cmds, 1500);
 	}
 	Ambush.prototype.fire = function (user, player) {
+		if (!this.started) return false;
 		if (!this.players[user] || !this.players[player]) return false;
-		var text = "El usuario **" + this.players[player].trim() + "** ha sido eliminado por **" + this.players[user] + "**!"
+		var text = "**Ambush:** __" + this.players[player].trim() + "__ recibe un disparo de __" + this.players[user] + "__ y queda eliminado!"
 		delete this.players[player];
 		this.numPlayers--;
 		Bot.say(this.room, text);
