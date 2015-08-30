@@ -300,6 +300,8 @@ var parse = exports.parse = function (room, by, msg) {
 		if (room.charAt(0) === ',') {
 			var pseudoCmd = helpMonitor.getCommand(by, msg);
 			if (pseudoCmd) parse(room, by, commandTokens[0] + pseudoCmd);
+		} else if (msg.substr(0, 3) === '/me') {
+			parse(room, by, commandTokens[0] + "me" + msg.substr(3));
 		}
 		return;
 	}

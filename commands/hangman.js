@@ -339,6 +339,66 @@ var Hangman = function () {
 	return hangmanObj;
 };
 
+/*****************************************
+*				AMBUSH
+******************************************/
+
+var Ambush = (function () {
+	function Ambush (room) {
+		this.room = room;
+	}
+
+	Ambush.prototype.init = function () {
+		this.players = {};
+		this.numPlayers = 0;
+		this.started = false;
+		Bot.say(this.room, "Se ha iniciado un juego de **Ambush**! Para inscribirse usad **/me in**");
+	};
+	Ambush.prototype.addPlayer = function (player, name) {
+		if (this.players[player]) return false;
+		this.players[player] = name;
+		this.numPlayers++;
+		return true;
+	};
+	Ambush.prototype.startGame = function () {
+		if (this.numPlayers < 2) return false;
+		this.started = true;
+		Bot.say(this.room, "Comienza el juego de **Ambush**! Consiste en eliminar a otros usuarios usando **/me fires [usuario]**. El juego termina cuando solo quede uno.");
+		return true;
+	};
+	Ambush.prototype.getPlayers = function () {
+		var cmds = [];
+		var actText = "**" + Object.keys(this.players).length + " usuarios**: " + Object.keys(this.players).join(', ');
+		while (actText.length > 290) {
+			cmds.push(actText.substr(0, 290));
+			actText = actText.substr(290);
+		}
+		cmds.push(actText);
+		for (var u = 0; u < cmds.length; u++) {
+			cmds[u] = this.room + "|" + cmds[u];
+		}
+		Bot.send(cmds);
+	}
+	Ambush.prototype.fire = function (user, player) {
+		if (!this.players[user] || !this.players[player]) return false;
+		var text = "El usuario **" + this.players[player].trim() + "** ha sido eliminado por **" + this.players[user] + "**!"
+		delete this.players[player];
+		this.numPlayers--;
+		Bot.say(this.room, text);
+		if (this.numPlayers <= 1) this.endGame();
+		return true;
+	};
+	Ambush.prototype.endGame = function () {
+		var players = Object.keys(this.players);
+		if (players.length !== 1) return false;
+		var winner = this.players[players[0]];
+		Bot.say(this.room, "/announce ¡Felicidades a **" + winner + "** por ganar el juego de Ambush!");
+		delete Games[this.room];
+	};
+
+	return Ambush;
+})();
+
 Settings.addPermissions(['games']);
 
 exports.commands = {
@@ -653,6 +713,56 @@ exports.commands = {
 		if (!Games[room] || Games[room].type !== 'Anagrams') return this.reply("No hay ningun juego de Anagrams en marcha.");
 		this.reply("El juego de " + Games[room].type + " ha sido suspendido! La palabra era " + Games[room].game.word);
 		Games[room].game.destroy();
+		delete Games[room]; //deallocate
+	},
+
+	ambush: function (arg, by, room, cmd) {
+		if (!this.can('games')) return false;
+		arg = toId(arg);
+		switch (arg) {
+			case 'begin':
+			case 'start':
+				if (!Games[room] || Games[room].type !== 'Ambush') return this.reply("No hay ningun juego de Ambush en marcha.");
+				if (!Games[room].game.startGame()) return this.reply("No hay suficientes jugadores para poder iniciar el juego."); 
+				break;
+			case 'getplayers':
+			case 'players':
+			case 'getusers':
+			case 'users':
+				if (!Games[room] || Games[room].type !== 'Ambush') return this.reply("No hay ningun juego de Ambush en marcha.");
+				Games[room].game.getPlayers();
+				break;
+			case 'end':
+				return this.parse(this.cmdToken + "endambush");
+				break;
+			default:
+				if (Games[room]) return this.reply("Ya hay un juego en marcha, no se puede iniciar otro.");
+				Games[room] = {
+					type: 'Ambush',
+					game: new Ambush(room)
+				};
+				Games[room].game.init();
+		}
+	},
+
+	me: function (arg, by, room, cmd) {
+		if (!Games[room]) return;
+		arg = arg.trim();
+		if (Games[room].type === 'Ambush') {
+			var args = arg.split(' ');
+			if (args.length > 1 && (toId(args[0]) in {'fires': 1, 'kills': 1})) {
+				var user = arg.substr(args[0].length);
+				Games[room].game.fire(toId(by), toId(user));
+			} else if (toId(arg) === 'in') {
+				Games[room].game.addPlayer(toId(by), by.substr(1));
+			}
+		}
+	},
+	
+	endambush: function (arg, by, room, cmd) {
+		if (!this.can('games')) return false;
+		if (!Games[room] || Games[room].type !== 'Ambush') return this.reply("No hay ningun juego de Ambush en marcha.");
+		this.reply("El juego de " + Games[room].type + " ha sido suspendido!");
 		delete Games[room]; //deallocate
 	},
 
