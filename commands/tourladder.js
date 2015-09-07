@@ -26,6 +26,7 @@ exports.commands = {
 			room = toRoomid(args[0]);
 			if (!room || !user) return this.restrictReply("Debes especificar una sala. Uso correcto: " + this.cmdToken + this.cmd + " [sala], (usuario)", 'info');
 		}
+		user = toId(user);
 		if (Config.tourLadder.rooms.indexOf(room) < 0) return this.pmReply("La sala <<" + room + ">> no está en el ranking de torneos de este bot");
 		var name = user, points = 0, wins = 0, finals = 0, tours = 0;
 		if (Features['tourladder'].ladder[room] && Features['tourladder'].ladder[room][user]) {
