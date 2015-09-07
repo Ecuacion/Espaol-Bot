@@ -388,7 +388,7 @@ exports.commands = {
 					}
 					var text = '';
 					if (removed.length) {
-						text += this.trad('users') + 'User(s) "' + removed.join('", "') + '" ' + this.trad('removed') + '. ';
+						text += this.trad('users') + ' "' + removed.join('", "') + '" ' + this.trad('removed') + '. ';
 						Settings.save();
 					}
 					if (notFound.length) {
