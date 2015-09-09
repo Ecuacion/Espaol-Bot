@@ -20,6 +20,9 @@ exports.commands = {
 	wall: 'dyn',
 	info: 'dyn',
 	dyn: function (arg, by, room, cmd) {
+		try {
+			arg = arg.split(',')[0];
+		} catch (e) {}
 		var dcmd = toId(arg);
 		if (dcmd && CommandParser.dynCommands[dcmd] && CommandParser.dynCommands[dcmd].substr(0, 4) === "/ref") {
 			var basicCmd = toId(CommandParser.dynCommands[dcmd].substr(5));
