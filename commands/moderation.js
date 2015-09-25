@@ -953,7 +953,7 @@ exports.commands = {
 			'inapropiate': 1,
 			'warnwords': 1,
 			'carav': 1,
-			'groupchat',
+			'groupchat': 1,
 			'spoiler': 1,
 			'youtube': 1,
 			'psservers': 1,
