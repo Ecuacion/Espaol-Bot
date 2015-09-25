@@ -361,6 +361,17 @@ function parseChat (room, time, by, message) {
 			}
 		}
 	}
+	if (modSettings['groupchat'] !== 0) {
+		var msgLowTemp = msg.toLowerCase();
+		if (msgLowTemp.indexOf("psim.us/groupchat-") > -1 || msgLowTemp.indexOf("play.pokemonshowdown.com/groupchat-") > -1 || msgLowTemp.indexOf("<<groupchat-") > -1) {
+			infractions.push("Publicidad");
+			totalPointVal += 1;
+			if (pointVal < 1) {
+				pointVal = 1;
+				muteMessage = ', ' + trad('automod', room) + ': Hacer publicidad de grupos de chat privados no esta permitido';
+			}
+		}
+	}
 	
 	/****************************
 	* Caras sida
