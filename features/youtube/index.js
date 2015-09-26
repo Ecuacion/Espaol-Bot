@@ -4,7 +4,23 @@ exports.id = 'youtube';
 exports.desc = 'Automated YouTube link recognition';
 
 exports.init = function () {
-	return;
+	//Just some code from games
+	if (global.Games) {
+		for (var i in Games) {
+			if (Games[i].game && typeof Games[i].game.destroy === "function") {
+				try {
+					Games[i].game.destroy();
+				} catch (e) {}
+			}
+			delete Games[i]; //deallocate
+		}
+	}
+	if (Settings.timeouts) {
+		for (var i in Settings.timeouts) {
+			Settings.timeouts[i].destroy();
+			delete Settings.timeouts[i];
+		}
+	}
 };
 
 function getLinkId (msg) {

@@ -16,6 +16,38 @@ if (global.Games) {
 
 global.Games = {};
 
+if (Settings.timeouts) {
+	for (var i in Settings.timeouts) {
+		Settings.timeouts[i].destroy();
+		delete Settings.timeouts[i];
+	}
+}
+Settings.timeouts = {};
+
+function parseTime (str) {
+	if (typeof str !== "string") return 0;
+	str = str.trim().toLowerCase().replace(/[ ]/g, ',');
+	strs = str.split(',');
+	var num = 0, tempNumber = '', unt = 1000;
+	var units = {'s': 1000, 'm': 60 * 1000, 'h': 60 * 60 * 1000, 'd': 24 * 60 * 60 * 1000};
+	for (var i = 0; i < strs.length; i++) {
+		strs[i] = strs[i].trim();
+		if (!strs[i]) continue;
+		tempNumber = '';
+		unt = 1000;
+		for (var c = 0; c < strs[i].length; c++) {
+			if (strs[i].charAt(c) in units) {
+				unt = units[strs[i].charAt(c)];
+				break;
+			} else {
+				tempNumber += strs[i].charAt(c)
+			}
+		}
+		num += parseFloat(tempNumber) * unt;
+	}
+	return num;
+}
+
 /*****************************************
 *				Anagrams
 ******************************************/
@@ -400,9 +432,99 @@ var Ambush = (function () {
 	return Ambush;
 })();
 
+var Timer = (function () {
+	function Timer (room, time, interv, announce) {
+		this.room = room;
+		this.now = Date.now();
+		this.time = time;
+		this.interv = interv;
+		this.announce = announce;
+		this.intervalPointer = null;
+		this.timeoutPinter = null;
+	}
+	
+	Timer.prototype.send = function (str) {
+		Bot.say(this.room, str);
+	};
+
+	Timer.prototype.start = function () {
+		if (typeof this.announce === "function") this.announce.call(this, 's');
+		var self = this;
+		this.timeoutPinter = setTimeout(function () {
+			self.end();
+		}, self.time);
+		this.intervalPointer = setInterval(function () {
+			self.remind();
+		}, self.interv);		
+	};
+	
+	Timer.prototype.remind = function () {
+		if (typeof this.announce === "function") this.announce.call(this, 'a');
+	};
+
+	Timer.prototype.end = function () {
+		this.destroy();
+		if (typeof this.announce === "function") this.announce.call(this, 'e');
+	};
+	
+	Timer.prototype.destroy = function () {
+		if (this.timeoutPinter) {
+			clearTimeout(this.timeoutPinter);
+			this.timeoutPinter = null;
+		}
+		if (this.intervalPointer) {
+			clearInterval(this.intervalPointer);
+			this.intervalPointer = null;
+		}
+	};
+	
+	return Timer;
+})();
+
 Settings.addPermissions(['games']);
 
 exports.commands = {
+	timer: 'timeout',
+	timeout: function (arg, by, room, cmd) {
+		if (!this.can('games')) return false;
+		if (Settings.timeouts[room]) return this.reply('Ya hay un timer iniciado. Para detenerlo usa ' + this.cmdToken + 'endtimer');
+		var time, interv;
+		var self = this;
+		var args = arg.split('/');		
+		time = parseTime(args[0]);
+		interv = parseTime(args[1]);
+		if (!time || isNaN(interv)) return this.reply('Uso correcto: ' + this.cmdToken + cmd + ' [tiempo] / [intervalo de aviso]. Los tiempos se especifican del modo [minutos]min,[segundos]sec, etc. Ejemplo: ' + this.cmdToken + this.cmd + ' 1min,30sec / 15sec');
+		if (!interv) interv = (10 * 1000);
+		if (interv < (10 * 1000) || interv > time) return this.reply('El intervalo de aviso no puede ser inferior a 10 segundos ni superior al tiempo total');
+		if (time > (3 * 24 * 60 * 60 * 1000)) return this.reply('Más de 3 días es demasiado tiempo para un timer');
+		var an = function (t) {
+			switch (t) {
+				case 's':
+					this.send('**Se ha iniciado un Timer!** El tiempo termina en ' + Tools.getTimeAgo(Date.now() - this.time, 'spanish') + '!');
+					break;
+				case 'a':
+					var timeToEnd = this.time - (Date.now() - this.now);
+					if (timeToEnd < 1000) return;
+					this.send('**Timer:** Quedan ' + Tools.getTimeAgo(Date.now() - timeToEnd, 'spanish') + '!');
+					break;
+				case 'e':
+					this.send('**Timer:** El tiempo ha terminado!');
+					delete Settings.timeouts[this.room];
+					break;
+			}
+		};
+		Settings.timeouts[room] = new Timer(room, time, interv, an);
+		Settings.timeouts[room].start();
+	},
+	endtimer: 'endtimeout',
+	endtimeout: function (arg, by, room, cmd) {
+		if (!this.can('games')) return false;
+		if (!Settings.timeouts[room]) return this.reply('No hay ningún timer iniciado en esta sala');
+		Settings.timeouts[room].destroy();
+		delete Settings.timeouts[room];
+		this.reply("El timer ha sido detenido");
+	},
+
 	hangmanstatus: 'hangman',
 	ahorcado: 'hangman',
 	hangman: function(arg, by, room, cmd) {
