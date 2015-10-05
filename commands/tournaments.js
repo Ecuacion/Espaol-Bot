@@ -19,6 +19,7 @@ exports.commands = {
 
 	maketour: 'tournament',
 	newtour: 'tournament',
+	itour: 'tournament',
 	tour: 'tournament',
 	tournament: function (arg, by, room, cmd) {
 		if (this.roomType !== 'chat' || !this.can('tournament')) return;
@@ -156,6 +157,8 @@ exports.commands = {
 			if (Features['tours'].tournaments[room] && !Features['tours'].tourData[room]) {
 				Bot.say(room, this.trad('notstarted'));
 				delete Features['tours'].tournaments[room];
+			} else if (cmd !== 'maketour' && (cmd === 'itour' || room === 'espaol')) {
+				this.parse(this.cmdToken + 'info torneo');
 			}
 		}.bind(this), 2500);
 	}
