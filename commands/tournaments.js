@@ -9,10 +9,12 @@ exports.commands = {
 		this.restrictReply('Usage: ' + this.cmdToken + this.trad('h'), 'tournament');
 	},
 
+	tourstart: 'tourend',
 	tourend: function (arg, by, room, cmd) {
 		if (this.roomType !== 'chat' || !this.can('tournament')) return;
 		if (!Features['tours'].tourData[room]) return this.reply(this.trad('err'));
-		this.reply("/tournament end");
+		if (cmd === 'tourstart' && Features['tours'].tourData[room].isStarted) return false;
+		this.reply("/tournament " + (cmd === 'tourend' ? 'end' : 'start'));
 	},
 
 	maketour: 'tournament',
@@ -22,6 +24,7 @@ exports.commands = {
 		if (this.roomType !== 'chat' || !this.can('tournament')) return;
 		if (Features['tours'].tourData[room]) {
 			if (toId(arg) === 'end') return this.parse(this.cmdToken + 'tourend');
+			if (toId(arg) === 'start') return this.parse(this.cmdToken + 'tourstart');
 			return this.reply(this.trad('e2'));
 		}
 		var details = {
@@ -43,7 +46,8 @@ exports.commands = {
 				type: null,
 				maxUsers: null,
 				timeToStart: null,
-				autodq: null
+				autodq: null,
+				scout: null
 			};
 			var splArg;
 			for (var i = 0; i < args.length; i++) {
@@ -93,8 +97,14 @@ exports.commands = {
 						case 'type':
 							params.type = valueArg;
 							break;
+						case 'scouting':
+						case 'scout':
+						case 'setscout':
+						case 'setscouting':
+							params.scout = valueArg;
+							break;
 						default:
-							return this.reply(this.trad('param') + ' ' + idArg + ' ' + this.trad('paramhelp') + ": tier, timer, dq, users, type");
+							return this.reply(this.trad('param') + ' ' + idArg + ' ' + this.trad('paramhelp') + ": tier, timer, dq, users, type, scout");
 					}
 				}
 			}
@@ -134,6 +144,11 @@ exports.commands = {
 				var type = toId(params.type);
 				if (type !== 'elimination' && type !== 'roundrobin') return this.reply(this.trad('e7'));
 				details.type = type;
+			}
+			if (params.scout) {
+				var scout = toId(params.scout);
+				if (scout in {'yes': 1, 'on': 1, 'true': 1, 'allow': 1, 'allowed': 1})  details.scoutProtect = false;
+				else details.scoutProtect = true;
 			}
 		}
 		Features['tours'].newTour(room, details);
