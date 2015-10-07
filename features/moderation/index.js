@@ -471,13 +471,6 @@ function parseChat (room, time, by, message) {
 		pointVal += chatData[room][user].points;
 		chatData[room][user].points++;
 		if (pointVal > Config.moderation.punishments.length) pointVal = Config.moderation.punishments.length;
-		if (pointVal >= 2) {
-			if (!zeroTol[user]) zeroTol[user] = 0;
-			zeroTol[user]++;
-			if (zeroTol[user] > 4 && Config.moderation.zeroToleranceDefaultLevel) {
-				addZeroTolUser(user, Config.moderation.zeroToleranceDefaultLevel);
-			}
-		}
 
 		var cmd = Config.moderation.punishments[pointVal - 1];
 
@@ -507,6 +500,7 @@ function parseRename (room, by, old) {
 }
 
 function parseRaw (room, raw) {
+	if (room !== 'espaol' && room !== 'eventos') return;
 	var indexwarn = raw.indexOf(" was warned by ");
 	var indexmute = raw.indexOf(" was muted by ");
 	if (indexmute !== -1) {
