@@ -1,4 +1,4 @@
-const REQUIRED_TIME_DIFF = 2 * 60 * 1000;
+const REQUIRED_TIME_DIFF = 30 * 1000;
 const AUTOCONFIRMED_AGE_REQUIRED = 7 * 24 * 60 * 60 * 1000;
 
 var lastHelpUsage = {};
@@ -53,13 +53,14 @@ function isEmpty (obj) {
 
 exports.commands = {
 	ayudamodchat: 'achelp',
+	checkac: 'achelp',
 	achelp: function (arg, by, room, cmd) {
 		var user = toId(by);
-		if (!this.isExcepted && !canUseHelpCommand(user)) return this.pmReply('Debido al ancho de banda que consume, este comando solo puede ser usado con una fecuencia máxima de un comando cada 2 minutos');
-		if (this.isExcepted && arg) {
+		if (!this.isExcepted && !canUseHelpCommand(user)) return this.pmReply('Este comando solo puede ser usado con una fecuencia máxima de un comando cada 30 segundos');
+		if (toId(arg)) {
 			user = toId(arg);
 		}
-		this.pmReply('Un momento, por favor. Estoy comprobado el estado de tu cuenta...');
+		this.pmReply('Un momento por favor, estoy comprobado el estado de la cuenta "' + user + '"');
 		lastHelpUsage[toId(by)] = Date.now();
 		sweepUsage();
 		var http = require('http');
