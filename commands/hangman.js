@@ -250,7 +250,7 @@ var Anagrams = function () {
 				if (maxPoints < this.points[i]) maxPoints = this.points[i];
 			}
 			if (!maxPoints) {
-				Bot.say(this.room, 'El juego de **Anagrams** ha terminado! Lamentablemente nadie ha conseguido responder a ninguna de la preguntas (lol) por lo que lo hay ningún ganador.');
+				Bot.say(this.room, 'El juego de **Anagrams** ha terminado! Lamentablemente nadie ha conseguido responder a ninguna de la preguntas (lol) por lo que no hay ningún ganador.');
 			} else {
 				var winners = [];
 				for (var i in this.points) {
@@ -481,9 +481,340 @@ var Timer = (function () {
 	return Timer;
 })();
 
+/*****************
+* Blackjack
+******************/
+
+function generateDeck () {
+	var deck = [];
+	var cards = ['\u2660', '\u2663', '\u2665', '\u2666'];
+	var values = ['A', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K'];
+	for (var i = 0; i < cards.length; i++) {
+		for (var j = 0; j < values.length; j++) {
+			deck.push({card: cards[i], value: values[j]});
+		}
+	}
+	return deck.randomize();
+}
+
+function joinArray (arr, str1) {
+	if (!arr.length) return '';
+	var txt = "**" + arr[0] + "**";
+	if (arr.length > 1) {
+		for (var i = 1; i < arr.length - 1; i++) txt += ", **" + arr[i] + "**";
+		txt += " " + str1 + " " + "**" + arr[arr.length - 1] + "**";
+	}
+	return txt;
+}
+
+function formateHand (hand, total, str1) {
+	var txt = "";
+	for (var i = 0; i < hand.length; i++) {
+		txt += "**[" + hand[i].card + hand[i].value + "]** ";
+	}
+	txt += " " + str1 + ": **" + total + "**";
+	return txt;
+}
+
+var bjParser = function (type, data) {
+	switch (type) {
+		case 'singups':
+			Bot.say(this.room, "Se ha iniciado un nuevo juego de **Blackjack**! Para incribirse usad **/me in**. Para comenzar el juego, se debe usar **.bj start**");
+			break;
+		case 'start':
+			Bot.say(this.room, "**" + "El juego de Blackjack ha comenzado" + "** " + "Primera carta de la Banca" + ": **[" + this.dealerHand[0].card + this.dealerHand[0].value + "]**");
+			break;
+		case 'turn':
+			Bot.say(this.room, "**" + "Blackjack" + ":** " + "Turno de" + " " + data.name + "!" + " " + "Usa **.hit** para pedir cartas y **.stand** para quedarse y terminar el turno (El tiempo máximo del turno son " + " " + Math.floor(this.turnTime / 1000).toString() + " " + "segundos)");
+			Bot.say(this.room, "**" + "Blackjack" + ":** " + "Mano de" + " " + data.name + "" + ": " + formateHand(data.hand, this.getHandValue(data.hand), "Total"));
+			break;
+		case 'player':
+			if (data.type === "stand") {
+				Bot.say(this.room, "**" + "Blackjack" + ":** " + this.currPlayer.name + " " + "se queda con lo que tiene" + "!");
+			} else if (data.type === "hit") {
+				Bot.say(this.room, "**" + "Blackjack" + ":** " + this.currPlayer.name + " " + "recibe una carta! Mano" + ": " + formateHand(this.currPlayer.hand, this.getHandValue(this.currPlayer.hand), "Total"));
+			}
+			var handval = this.getHandValue(this.currPlayer.hand);
+			if (handval === 21) {
+				Bot.say(this.room, "**" + "Blackjack" + ":** " + this.currPlayer.name + " " + "ha conseguido un Blackjack, Felicidades" + "!");
+			} else if (handval > 21) {
+				Bot.say(this.room, "**" + "Blackjack" + ":** " + this.currPlayer.name + " " + "pierde por sobrepasar los 21 con" + " " + handval + "");
+			}
+			break;
+		case 'timeout':
+			Bot.say(this.room, "**" + "Blackjack" + ":** " + "El tiempo para el turno de" + " " + data.name + "" + " ha concluido!");
+			var handval = this.getHandValue(data.hand);
+			if (handval === 21) {
+				Bot.say(this.room, "**" + "Blackjack" + ":** " + data.name + " " + "ha conseguido un Blackjack, Felicidades" + "!");
+			} else if (handval > 21) {
+				Bot.say(this.room, "**" + "Blackjack" + ":** " + data.name + " " + "pierde por sobrepasar los 21 con" + " " + handval + "");
+			}
+			break;
+		case 'dealer':
+			if (data.type === "stand") {
+				Bot.say(this.room, "**" + "Blackjack" + ":** " + "La Banca" + " " + "se queda con lo que tiene" + "!");
+			} else if (data.type === "hit") {
+				Bot.say(this.room, "**" + "Blackjack" + ":** " + "La Banca" + " " + "recibe una carta! Mano" + ": " + formateHand(this.dealerHand, this.getHandValue(this.dealerHand), "Total"));
+			} else if (data.type === "turn") {
+				return Bot.say(this.room, "**" + "Blackjack" + ":** " + "Es el turno de la Banca! Mano" + ": " + formateHand(this.dealerHand, this.getHandValue(this.dealerHand), "Total"));
+			}
+			var handval = this.getHandValue(this.dealerHand);
+			if (handval === 21) {
+				Bot.say(this.room, "**" + "Blackjack" + ":** " + "La Banca tiene un Blackjack! Mas suerte la próxima!");
+			} else if (handval > 21) {
+				Bot.say(this.room, "**" + "Blackjack" + ":** " + "La Banca pierde por sobrepasar los 21 con" + " " + handval + ". Es vuestro día de suerte!");
+			}
+			break;
+		case 'end':
+			if (data.naturals.length) Bot.say(this.room, "Felicidades a" + " " + joinArray(data.naturals, "y") + " " + "por conseguir un Blackjack" + "!");
+			var txt = "**" + "El juego de Blackjack ha terminado!" + "**";
+			if (data.winners.length) {
+				txt += " " + "Felicidades a" + " " + joinArray(data.winners, "y") + " " + "por ganar a la Banca" + "!";
+			} else {
+				txt += " " + "Lamentablemente nadie ha conseguido ganar a la Banca esta vez";
+			}
+			Bot.say(this.room, txt);
+			break;
+		case 'forceend':
+			Bot.say(this.room, "El juego de Blackjack ha sido finalizado");
+			break;
+	}
+	if (type in {win: 1, end: 1, forceend: 1}) {
+		try {
+			Games[this.room].game.destroy();
+		} catch (e) {}
+		delete Games[this.room]; //deallocate
+	}
+};
+
+var BlackJack = exports.BlackJack = (function () {
+	function BlackJack (opts, output) {
+		this.output = output;
+		this.timer = null;
+		this.room = opts.room || '';
+		this.title = opts.title || 'BlackJack';
+		this.status = 0;
+		this.deck = generateDeck();
+		this.users = {};
+		this.players = [];
+		this.turn = -1;
+		this.currPlayer = null;
+		this.waitTime = opts.waitTime || 2000;
+		this.turnTime = opts.turnTime || 30000;
+		this.maxPlayers = opts.maxPlayers || 16;
+		this.dealerHand = [];
+	}
+
+	BlackJack.prototype.getHandValue = function (hand) {
+		var value = 0;
+		var AS = 0;
+		for (var i = 0; i < hand.length; i++) {
+			if (typeof hand[i].value === "number") {
+				value += hand[i].value;
+			} else if (hand[i].value in {"J": 1, "Q": 1, "K": 1}) {
+				value += 10;
+			} else if (hand[i].value === "A") {
+				value += 1;
+				AS++;
+			}
+		}
+		for (var j = 0; j < AS; j++) {
+			if ((value + 10) <= 21) value += 10;
+		}
+		return value;
+	};
+
+	BlackJack.prototype.emit = function (type, data) {
+		if (typeof this.output === "function") return this.output.call(this, type, data);
+	};
+
+	BlackJack.prototype.init = function () {
+		this.singups();
+	};
+
+	BlackJack.prototype.singups = function () {
+		this.users = {};
+		this.status = 1;
+		this.emit('singups', null);
+	};
+
+	BlackJack.prototype.userJoin = function (user) {
+		if (this.status !== 1) return;
+		var userid = toId(user);
+		if (this.users[userid]) return false;
+		this.users[userid] = user;
+		if (Object.keys(this.users).length >= this.maxPlayers) this.start();
+		return true;
+	};
+
+	BlackJack.prototype.userLeave = function (user) {
+		if (this.status !== 1) return;
+		var userid = toId(user);
+		if (!this.users[userid]) return false;
+		delete this.users[userid];
+		return true;
+	};
+
+	BlackJack.prototype.getPlayers = function () {
+		var players = [];
+		for (var i in this.users) {
+			players.push(this.users[i].substr(1));
+		}
+		return players;
+	};
+
+	BlackJack.prototype.start = function () {
+		var players = [];
+		for (var i in this.users) {
+			players.push({id: i, name: this.users[i].substr(1), hand: []});
+		}
+		if (!players.length) return false;
+		this.players = players.randomize();
+		this.status = 2;
+		this.turn = -1;
+		this.dealerHand = [this.getCard(), this.getCard()];
+		this.emit('start', null);
+		this.wait();
+		return true;
+	};
+
+	BlackJack.prototype.wait = function () {
+		this.status = 2;
+		this.timer = setTimeout(this.nextTurn.bind(this), this.waitTime);
+	};
+
+	BlackJack.prototype.timeout = function () {
+		this.status = 2;
+		this.emit('timeout', this.currPlayer);
+		this.timer = null;
+		this.wait();
+	};
+
+	BlackJack.prototype.getCard = function () {
+		if (!this.deck.length) this.deck = generateDeck();
+		return this.deck.pop();
+	};
+
+	BlackJack.prototype.nextTurn = function () {
+		this.timer = null;
+		this.turn++;
+		this.currPlayer = this.players[this.turn];
+		if (!this.currPlayer) return this.end();
+		this.currPlayer.hand = [this.getCard(), this.getCard()];
+		this.status = 3;
+		this.emit('turn', this.currPlayer);
+		this.timer = setTimeout(this.timeout.bind(this), this.turnTime);
+	};
+
+	BlackJack.prototype.stand = function (user) {
+		if (this.status !== 3) return;
+		user = toId(user);
+		if (!this.currPlayer || this.currPlayer.id !== user) return;
+		this.status = 2;
+		this.clearTimers();
+		this.emit('player', {type: 'stand'});
+		this.wait();
+	};
+	BlackJack.prototype.hit = function (user) {
+		if (this.status !== 3) return;
+		user = toId(user);
+		if (!this.currPlayer || this.currPlayer.id !== user) return;
+		this.currPlayer.hand.push(this.getCard());
+		if (this.getHandValue(this.currPlayer.hand) >= 21) {
+			this.status = 2;
+			this.clearTimers();
+			this.wait();
+		}
+		this.emit('player', {type: 'hit'});
+	};
+
+	BlackJack.prototype.end = function (forced) {
+		this.status = 0;
+		this.clearTimers();
+		if (forced) return this.emit('forceend', null);
+		//dealer turn
+		this.emit('dealer', {type: 'turn'});
+		var dealerTotal = this.getHandValue(this.dealerHand);
+		if (dealerTotal >= 17) {
+			this.emit('dealer', {type: 'stand'});
+		} else {
+			this.dealerHand.push(this.getCard());
+			this.emit('dealer', {type: 'hit'});
+		}
+		//winners
+		var naturals = [], winners = [];
+		dealerTotal = this.getHandValue(this.dealerHand);
+		if (dealerTotal > 21) dealerTotal = 0;
+		var value;
+		for (var i = 0; i < this.players.length; i++) {
+			value = this.getHandValue(this.players[i].hand);
+			if (value > 21) continue;
+			if (value === 21) naturals.push(this.players[i].name);
+			if (value > dealerTotal) winners.push(this.players[i].name);
+		}
+		this.timer = setTimeout(function () {
+			this.emit('end', {winners: winners, naturals: naturals});
+		}.bind(this), this.waitTime);
+	};
+
+	BlackJack.prototype.clearTimers = function () {
+		if (this.timer) {
+			clearTimeout(this.timer);
+			this.timer = null;
+		}
+	};
+
+	BlackJack.prototype.destroy = function () {
+		this.clearTimers();
+	};
+
+	return BlackJack;
+})();
+
 Settings.addPermissions(['games']);
 
 exports.commands = {
+	bj: 'blackjack',
+	blackjack: function (arg, by, room, cmd) {
+		if (!this.can('games')) return false;
+		if (Games[room]) {
+			if (Games[room].type === 'Blackjack' && toId(arg) === 'end') {
+				this.reply("El juego de " + Games[room].type + " ha sido finalizado!");
+				try {
+					Games[room].game.destroy();
+				} catch (e) {}
+				delete Games[room]; //deallocate
+				return;
+			} else if (Games[room].type === 'Blackjack' && toId(arg) === 'start') {
+				if (!Games[room].game.start()) this.reply("No hay participantes suficientes para que se pueda iniciar el juego");
+				return;
+			} else if (Games[room].type === 'Blackjack' && toId(arg) === 'players') {
+				if (!Object.keys(Games[room].game.users).length) return this.restrictReply("No hay ningún jugador participando en el juego de Blackjack", "games");
+				this.restrictReply("**" + "Jugadores" + " (" + Object.keys(Games[room].game.users).length + "):** " + Games[room].game.getPlayers().join(', '), 'games');
+				return
+			}
+			return this.reply('Ya hay un juego de ' + Games[room].type + '. No se puede iniciar otro');
+		}
+		var args = arg.split(',');
+		var opts = {room: room, title: 'Blackjack'};
+		var players = (toId(args[1] || '')) ? parseInt(args[1]) : 16;
+		if (toId(args[0]) !== 'new' || !players || players < 1) return this.reply("Usa el comando así: .bj new, (numero maximo de jugadores)");
+		if (players < 2) return this.reply("El máximo no puede ser inferior a 2 jugadores");
+		opts.maxPlayers = players;
+		Games[room] = {
+			type: 'Blackjack',
+			game: new BlackJack(opts, bjParser)
+		};
+		Games[room].game.init();
+	},
+	hit: function (arg, by, room, cmd) {
+		if (!Games[room] || Games[room].type !== 'Blackjack') return;
+		Games[room].game.hit(by);
+	},
+	stand: function (arg, by, room, cmd) {
+		if (!Games[room] || Games[room].type !== 'Blackjack') return;
+		Games[room].game.stand(by);
+	},
 	timer: 'timeout',
 	timeout: function (arg, by, room, cmd) {
 		if (!this.can('games')) return false;
@@ -878,6 +1209,14 @@ exports.commands = {
 				Games[room].game.fire(toId(by), toId(user));
 			} else if (toId(arg) === 'in') {
 				Games[room].game.addPlayer(toId(by), by.substr(1));
+			}
+		}
+		if (Games[room].type === 'Blackjack') {
+			var args = arg.split(' ');
+			if (toId(arg) === 'in') {
+				Games[room].game.userJoin(by);
+			} else if (toId(arg) === 'out') {
+				Games[room].game.userLeave(by);
 			}
 		}
 	},
