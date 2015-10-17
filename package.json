@@ -1,20 +1,27 @@
 {
   "name": "espaol-bot",
-  "version": "2.0.0",
-  "author": "Ecuacion",
+  "version": "2.1.4",
+  "author": {
+    "name": "Ecuacion",
+	"email": "alajandro5gt01@gmail.com",
+	"url": "https://github.com/Ecuacion"
+  },
   "scripts": {
     "start": "node index.js",
 	"test": "gulp"
   },
   "contributors": [
-    "Ecuacion <alajandro5gt01@gmail.com>"
+    {
+      "name": "xJoelituh",
+      "url": "https://github.com/xJoelituh/"
+    }
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Ecuacion/Pokemon-Showdown-Node-Bot"
+    "url": "https://github.com/Ecuacion/Espaol-Bot"
   },
   "bugs": {
-    "url": "https://github.com/Ecuacion/Pokemon-Showdown-Node-Bot/issues"
+    "url": "https://github.com/Ecuacion/Espaol-Bot/issues"
   },
   "main": "index",
   "bin": "./index.js",
@@ -40,5 +47,5 @@
     "merge-stream": "~0.1.7"
   },
   "description": "Pokemon Showdown Bot",
-  "homepage": "https://github.com/Ecuacion/Pokemon-Showdown-Node-Bot"
+  "homepage": "https://github.com/Ecuacion/Espaol-Bot"
 }

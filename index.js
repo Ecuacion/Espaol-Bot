@@ -353,7 +353,7 @@ Bot.on('userrename', function (room, old, by) {
 Bot.on('line', function (room, message, isIntro, spl) {
 	for (var f in Features) {
 		try {
-			Features[f].parse(room, message, isIntro, spl);
+			if (typeof Features[f].parse === "function") Features[f].parse(room, message, isIntro, spl);
 		} catch (e) {
 			errlog(e.stack);
 			error("Feature Crash: " + f + " | " + sys.inspect(e));
