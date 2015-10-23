@@ -28,6 +28,17 @@ function getDynCmds () {
 }
 
 function getZeroTol () {
+	var ztLevels, defaultLevel, aliases;
+	if (Config.moderation && Config.moderation.zeroToleranceLevels && Config.moderation.zeroToleranceDefaultLevel) {
+		ztLevels = Config.moderation.zeroToleranceLevels;
+		defaultLevel = Config.moderation.zeroToleranceDefaultLevel;
+		aliases = {};
+		for (var l in ztLevels) {
+			if (ztLevels[l].name) aliases[toId(ztLevels[l].name)] = l;
+		}
+	} else {
+		return "La lista de tolerancia 0 esta deshabilitada";
+	}
 	var ztList = [];
 	if (Settings.settings['zerotol']) {
 		for (var i in Settings.settings['zerotol']) {
