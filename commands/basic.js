@@ -15,7 +15,7 @@ exports.commands = {
 	credits: 'about',
 	bot: 'about',
 	about: function () {
-		this.restrictReply("Soy " + this.botname + ", el Bot de la sala Española, programado en Javascript para Node por Ecuacion y xJoelituh. (https://github.com/Ecuacion/Espaol-Bot)", 'info');
+		this.restrictReply("Soy " + this.botName + ", el Bot de la sala Española, programado en Javascript para Node por Ecuacion y xJoelituh. (https://github.com/Ecuacion/Espaol-Bot)", 'info');
 	},
 
 	bottime: 'time',

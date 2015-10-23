@@ -1202,7 +1202,7 @@ exports.commands = {
 	me: function (arg, by, room, cmd) {
 		if (!Games[room]) return;
 		arg = arg.trim();
-		if (Games[room].type === 'Ambush') {
+		if (Games[room] && Games[room].type === 'Ambush') {
 			var args = arg.split(' ');
 			if (args.length > 1 && (toId(args[0]) in {'fires': 1, 'kills': 1})) {
 				var user = arg.substr(args[0].length);
@@ -1211,7 +1211,7 @@ exports.commands = {
 				Games[room].game.addPlayer(toId(by), by.substr(1));
 			}
 		}
-		if (Games[room].type === 'Blackjack') {
+		if (Games[room] && Games[room].type === 'Blackjack') {
 			var args = arg.split(' ');
 			if (toId(arg) === 'in') {
 				Games[room].game.userJoin(by);

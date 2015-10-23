@@ -110,6 +110,15 @@ exports.addLeftZero = function (num, nz) {
 	return str;
 };
 
+exports.watchFile = function () {
+	try {
+		return fs.watchFile.apply(fs, arguments);
+	} catch (e) {
+		error('Your version of node does not support `fs.watchFile`');
+		return false;
+	}
+};
+
 exports.getDateString = function () {
 	var date = new Date();
 	return (Tools.addLeftZero(date.getDate(), 2) + '/' + Tools.addLeftZero(date.getMonth() + 1, 2) + '/' + Tools.addLeftZero(date.getFullYear(), 4) + ' ' + Tools.addLeftZero(date.getHours(), 2) + ':' + Tools.addLeftZero(date.getMinutes(), 2) + ':' + Tools.addLeftZero(date.getSeconds(), 2));
