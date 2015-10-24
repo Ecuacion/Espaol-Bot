@@ -68,13 +68,13 @@ function isBotRanked (room, rank) {
 	return false;
 }
 
-function isBanned (room, user) {
+function isBanned (room, user, noregexp) {
 	user = toId(user);
 	if (Settings.settings['autoban'] && Settings.settings['autoban'][room] && Settings.settings['autoban'][room][user]) return true;
-	if (Settings.settings['regexautoban'] && Settings.settings['regexautoban'][room]) {
-		for (var i = 0; i < Settings.settings['regexautoban'][room].length; i++) {
+	if (!noregexp && Settings.settings['regexautoban'] && Settings.settings['regexautoban'][room]) {
+		for (var i in Settings.settings['regexautoban'][room]) {
 			try {
-				var regexObj = new RegExp(i, 'i');
+				var regexObj = new RegExp(i.substr(1, i.length - 3), 'i');
 				if (regexObj.test(user)) return '#range';
 			} catch (e) {}
 		}
@@ -141,7 +141,7 @@ function parseChat (room, time, by, message) {
 	var rankExcepted = Config.moderation.modException;
 	if (Settings.settings['modexception'] && Settings.settings['modexception'][room]) rankExcepted = Settings.settings['modexception'][room];
 	if (Tools.equalOrHigherRank(by, rankExcepted)) return;
-	var ban = isBanned(room, by);
+	var ban = isBanned(room, by, true);
 	if (ban) Bot.say(room, '/roomban ' + by + ', ' + trad('ab', room) + ((ban === '#range') ? ' (RegExp)' : ''));
 
 	/* Chat Logs */
@@ -486,7 +486,7 @@ function parseJoin (room, by) {
 	if (jp) Bot.say(room, jp);
 	if (Tools.equalOrHigherRank(by, Config.moderation.modException)) return;
 	var ban = isBanned(room, by);
-	if (ban) Bot.say(room, '/roomban ' + by + ', ' + trad('ab', room) + ((ban === '#range') ? ' (RegExp)' : ''));
+	if (ban) Bot.say(room, '/roomban ' + by + ', ' + trad('ab', room) + ((ban === '#range') ? ': Nombre de usuario prohibido' : ''));
 }
 
 function parseLeave (room, by) {
@@ -496,7 +496,7 @@ function parseLeave (room, by) {
 function parseRename (room, by, old) {
 	if (Tools.equalOrHigherRank(by, Config.moderation.modException)) return;
 	var ban = isBanned(room, by);
-	if (ban) Bot.say(room, '/roomban ' + by + ', ' + trad('ab', room) + ((ban === '#range') ? ' (RegExp)' : ''));
+	if (ban) Bot.say(room, '/roomban ' + by + ', ' + trad('ab', room) + ((ban === '#range') ? ': Nombre de usuario prohibido' : ''));
 }
 
 function parseRaw (room, raw) {
