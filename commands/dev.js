@@ -145,13 +145,13 @@ exports.commands = {
 	},
 
 	send: function (arg, by, room, cmd) {
-		if (!this.isRanked('~')) return false;
+		if (!this.isExcepted) return false;
 		Bot.send(arg);
 	},
 
 	c: 'custom',
 	custom: function (arg, by, room, cmd) {
-		if (!this.isRanked('~')) return false;
+		if (!this.isExcepted) return false;
 		var tarRoom;
 		if (arg.indexOf('[') === 0 && arg.indexOf(']') > -1) {
 			tarRoom = toRoomid(arg.slice(1, arg.indexOf(']')));
@@ -161,7 +161,7 @@ exports.commands = {
 	},
 
 	"join": function (arg, by, room, cmd) {
-		if (!this.isRanked('~')) return false;
+		if (!this.isExcepted) return false;
 		if (!arg) return;
 		arg = arg.split(',');
 		var cmds = [];
@@ -172,7 +172,7 @@ exports.commands = {
 	},
 
 	leave: function (arg, by, room, cmd) {
-		if (!this.isRanked('~')) return false;
+		if (!this.isRanked('#')) return false;
 		if (!arg) {
 			if (this.roomType !== 'pm') this.reply('/leave');
 			return;
@@ -188,7 +188,7 @@ exports.commands = {
 	joinallrooms: 'joinall',
 	joinrooms: 'joinall',
 	joinall: function (arg, by, room, cmd) {
-		if (!this.isRanked('~')) return false;
+		if (!this.isExcepted) return false;
 		var target = 'all';
 		arg = toId(arg);
 		if (arg.length || cmd === 'joinrooms') {
