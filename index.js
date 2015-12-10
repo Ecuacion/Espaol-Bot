@@ -31,6 +31,11 @@ if (!fs.existsSync('./config.js')) {
 	fs.writeFileSync('./config.js', fs.readFileSync('./config-example.js'));
 }
 
+if (!fs.existsSync('./data/' + "_temp/")) {
+	console.log('./data/' + "_temp/" + " does not exist - creating temp directory...");
+	fs.mkdirSync('./data/' + "_temp/");
+}
+
 global.Config = require('./config.js');
 Tools.checkConfig();
 

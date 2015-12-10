@@ -1344,5 +1344,24 @@ exports.levenshtein = function (s, t, l) { // s = string 1, t = string 2, l = li
 	return d[n][m];
 };
 
+exports.httpGet = function (url, callback) {
+	if (typeof callback !== "function") return;
+	var http = require("http");
+	http.get(url, function (res) {
+		var data = '';
+		res.on('data', function (part) {
+			data += part;
+		});
+		res.on('end', function () {
+			callback(data);
+		});
+		res.on('error', function (e) {
+			callback(null, e);
+		});
+	}).on('error', function (e) {
+		callback(null, e);
+	});
+};
+
 //var GitHubApiLib = require("github");
 //global.GitHubApi = new GitHubApiLib({version: "3.0.0"});

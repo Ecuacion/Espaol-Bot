@@ -110,7 +110,29 @@
 			]
 		},
 		usage: {
-			'stats': 'Estadísticas de uso'
+			'in': 'en',
+			'stats': 'Estadísticas de uso',
+			'data': 'Datos de uso',
+			'usage': 'Uso correcto',
+			'tiererr1': 'Tier o formato',
+			'tiererr2': 'no encontrado',
+			'tiererr3': 'no disponible',
+			'err': 'No se pudieron descargar datos desde',
+			'busy': 'Descargando los datos. Intenta este comando de nuevo en unos minutos',
+			'pokeerr1': 'Pokemon',
+			'pokeerr2': 'no disponible en',
+			'pokeerr3': ' (Datos de uso)',
+			'pokeerr4': ' (Estadísticas de uso)',
+			'notfound': 'No se encontraron datos para',
+			'usagedata1': '#NAME de ',
+			'usagedata2': '',
+			'pokeusage': 'Uso',
+			'pokeraw': 'Raw',
+			'abilities': 'Habilidades',
+			'items': 'Objetos',
+			'moves': 'Movimientos',
+			'spreads': 'Spreads',
+			'teammates': 'Compañeros'
 		},
 		help: {
 			'guide': 'Guía de comandos del bot'
@@ -1651,7 +1673,7 @@ exports.translations.moves = {
 	"vinewhip": "Látigo Cepa",
 	"vitalthrow": "Tiro Vital",
 	"voltswitch": "Voltiocambio",
-	"volttackle": "Placaje Eléc",
+	"volttackle": "Placaje Eléctrico",
 	"wakeupslap": "Espabila",
 	"watergun": "Pistola Agua",
 	"waterpledge": "Voto Agua",

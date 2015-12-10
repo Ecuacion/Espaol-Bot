@@ -29,11 +29,6 @@ exports.commands = {
 		this.restrictReply(text, 'randomanswer');
 	},
 
-	usagestats: 'usage',
-	usage: function (arg, user, room) {
-		this.restrictReply(this.trad('stats') + ': http://www.smogon.com/stats/', 'info');
-	},
-
 	guide: 'help',
 	botguide: 'help',
 	help: function (arg, user, room) {
