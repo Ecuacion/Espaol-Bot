@@ -301,7 +301,7 @@ var parse = exports.parse = function (room, by, msg) {
 	if (!Tools.equalOrHigherRank(by, true)) {
 		if (resourceMonitor.isLocked(by)) return;
 	}
-	if (msg.substr(0, 8) === '/invite ' && Tools.equalOrHigherRank(by, '%')) {
+	if (msg.substr(0, 8) === '/invite ' && Tools.equalOrHigherRank(by, true)) {
 		Bot.say('', '/join ' +  msg.substr(8));
 		return;
 	}

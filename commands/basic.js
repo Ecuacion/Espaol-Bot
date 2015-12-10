@@ -104,7 +104,7 @@ exports.commands = {
 	say: function (arg) {
 		if (!arg) return;
 		if (!this.can('say')) return;
-		if (!this.isRanked('~')) return this.reply(Tools.stripCommands(arg));
+		if (!this.isExcepted) return this.reply(Tools.stripCommands(arg));
 		return this.reply(arg);
 	},
 
