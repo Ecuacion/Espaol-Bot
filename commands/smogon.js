@@ -3,14 +3,10 @@
 */
 
 const REQUIRED_TIME_DIFF = 10 * 1000;
-const REQUIRED_TIME_DIFF_ROOM = 10 * 1000;
 
-var lastUsageRoom = {}, lastUsageUsers = {};
+var lastUsageUsers = {};
 
-function canUseUsageCommand (user, room) {
-	if (room && lastUsageRoom[room]) {
-		if (Date.now() - lastUsageRoom[room] < REQUIRED_TIME_DIFF_ROOM) return false;
-	}
+function canUseUsageCommand (user) {
 	if (user && lastUsageUsers[user]) {
 		if (Date.now() - lastUsageUsers[user] < REQUIRED_TIME_DIFF) return false;
 	}
@@ -18,9 +14,6 @@ function canUseUsageCommand (user, room) {
 }
 
 function sweepUsage () {
-	for (var r in lastUsageRoom) {
-		if (canUseUsageCommand(null, r)) delete lastUsageRoom[r];
-	}
 	for (var i in lastUsageUsers) {
 		if (canUseUsageCommand(i, null)) delete lastUsageUsers[i];
 	}
@@ -28,7 +21,6 @@ function sweepUsage () {
 
 function updateLastUsage (user, room) {
 	lastUsageUsers[user] = Date.now();
-	if (room.charAt(0) !== ",") lastUsageRoom[room] = Date.now();
 }
 
 function generateUsageLink (monthmod) {
@@ -99,7 +91,7 @@ exports.commands = {
 			for (var i = 0; i < args.length; i++) args[i] = toId(args[i]);
 			if (this.cmd === "usagedata") {
 				sweepUsage();
-				if (!canUseUsageCommand(toId(this.by), this.room)) return this.pmReply("Para evitar el spam este comando solo se puede usar 1 vez cada 10 segundos como maximo");
+				if (!canUseUsageCommand(toId(this.by))) return this.pmReply("Para evitar el spam este comando solo lo puedes usar 1 vez cada 10 segundos como maximo");
 				if (args.length < 2) return this.restrictReply(this.trad('usage') + ": " + this.cmdToken + this.cmd + " [pokemon], [moves / items / abilities / spreads / teammates], (tier)", 'usage');
 				poke = toId(args[0]);
 				dataType = toId(args[1]);
@@ -178,7 +170,7 @@ exports.commands = {
 						txt += result[i] + comma;
 					}
 					if (txt.length > 0) cmds.push(txt);
-					updateLastUsage(toId(this.by), this.room);
+					updateLastUsage(toId(this.by));
 					this.restrictReply(cmds, 'usagedata');
 				}.bind(this), function () {
 					markDownload(link + "moveset/" + tier + "-" + ladderType + ".txt", true);
