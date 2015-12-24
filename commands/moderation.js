@@ -673,7 +673,7 @@ exports.commands = {
 			textHelper = ' (' + tarRoom + ')';
 		}
 
-		if (tarRoom !== 'global' && (!Bot.rooms[tarRoom] || Bot.rooms[tarRoom].type !== 'chat')) return this.reply(this.trad('notchat') + textHelper);
+		if (tarRoom !== 'global' && (!Bot.rooms[tarRoom] || Bot.rooms[tarRoom].type !== 'chat')) return this.reply("Este comando solo funciona para las salas de chat" + textHelper);
 		if (tarRoom === 'salastaff') tarRoom = 'espaol';
 		arg = arg.trim().toLowerCase();
 
@@ -682,12 +682,12 @@ exports.commands = {
 			if (bannedPhrases === null) Settings.settings['warnphrases'] = {};
 			bannedPhrases = (Settings.settings['warnphrases'][tarRoom] = {});
 		} else if (bannedPhrases[arg]) {
-			return this.reply(this.trad('phrase') + ' "' + arg + '" ' + this.trad('already') + textHelper);
+			return this.reply("La frase" + ' "' + arg + '" ' + "ya estaba en la lista de warnwords" + textHelper);
 		}
 		bannedPhrases[arg] = 1;
 
 		Settings.save();
-		this.reply(this.trad('phrase') + ' "' + arg + '" ' + this.trad('ban') + textHelper);
+		this.reply("Frase" + ' "' + arg + '" ' + "agregada a la lista de warnwords" + textHelper);
 	},
 
 	unww: 'unwarnword',
@@ -712,14 +712,14 @@ exports.commands = {
 			textHelper = ' (' + tarRoom + ')';
 		}
 
-		if (tarRoom !== 'global' && (!Bot.rooms[tarRoom] || Bot.rooms[tarRoom].type !== 'chat')) return this.reply(this.trad('notchat') + textHelper);
+		if (tarRoom !== 'global' && (!Bot.rooms[tarRoom] || Bot.rooms[tarRoom].type !== 'chat')) return this.reply("Este comando solo funciona para las salas de chat" + textHelper);
 		if (tarRoom === 'salastaff') tarRoom = 'espaol';
 		arg = arg.trim().toLowerCase();
 
-		if (!Settings.settings['warnphrases']) return this.reply(this.trad('phrase') + ' "' + arg + '" ' + this.trad('not') + textHelper);
+		if (!Settings.settings['warnphrases']) return this.reply("La frase" + ' "' + arg + '" ' + "no estaba en la lista de warnwords" + textHelper);
 
 		var bannedPhrases = Settings.settings['warnphrases'][tarRoom];
-		if (!bannedPhrases || !bannedPhrases[arg]) return this.reply(this.trad('phrase') + ' "' + arg + '" ' + this.trad('not') + textHelper);
+		if (!bannedPhrases || !bannedPhrases[arg]) return this.reply("La frase" + ' "' + arg + '" ' + "no estaba en la lista de warnwords" + textHelper);
 
 		delete bannedPhrases[arg];
 		if (Object.isEmpty(bannedPhrases)) {
@@ -728,7 +728,7 @@ exports.commands = {
 		}
 
 		Settings.save();
-		this.reply(this.trad('phrase') + ' "' + arg + '" ' + this.trad('unban') + textHelper);
+		this.reply("Frase" + ' "' + arg + '" ' + "eliminada de la lista de warnwords" + textHelper);
 	},
 
 	viewwarnphrases: 'viewwarnwords',
@@ -752,26 +752,26 @@ exports.commands = {
 			textHelper = ' (' + tarRoom + ')';
 		}
 
-		if (tarRoom !== 'global' && (!Bot.rooms[tarRoom] || Bot.rooms[tarRoom].type !== 'chat')) return this.reply(this.trad('notchat') + textHelper);
+		if (tarRoom !== 'global' && (!Bot.rooms[tarRoom] || Bot.rooms[tarRoom].type !== 'chat')) return this.reply("Este comando solo funciona para las salas de chat" + textHelper);
 		if (tarRoom === 'salastaff') tarRoom = 'espaol';
 
-		if (tarRoom === 'global') bannedFrom += this.trad('globally');
-		else bannedFrom += this.trad('in') + ' ' + tarRoom;
+		if (tarRoom === 'global') bannedFrom += "en todas las salas";
+		else bannedFrom += "en" + ' ' + tarRoom;
 
 		if (!Settings.settings['warnphrases']) return this.reply(this.trad('nowords') + textHelper);
 		var bannedPhrases = Settings.settings['warnphrases'][tarRoom];
 		if (!bannedPhrases) return this.reply(this.trad('nowords') + textHelper);
 
 		if (arg.length) {
-			return this.reply(this.trad('phrase') + ' "' + arg + '" ' + this.trad('curr') + ' ' + (bannedPhrases[arg] ? '' : (this.trad('not') + ' ')) + this.trad('banned') + ' ' + bannedFrom + '.');
+			return this.reply("Frase" + ' "' + arg + '" ' + "actualmente" + ' ' + (bannedPhrases[arg] ? 'SI ' : ("NO" + ' ')) + "esta el la lista de warnwords" + ' ' + bannedFrom + '.');
 		}
 
 		var banList = Object.keys(bannedPhrases);
-		if (!banList.length) return this.reply(this.trad('nowords') + textHelper);
+		if (!banList.length) return this.reply("La lista de warnwords está vacía" + textHelper);
 
-		Tools.uploadToHastebin(this.trad('list') + ' ' + bannedFrom + ':\n\n' + banList.join('\n'), function (r, link) {
-			if (r) return this.pmReply(this.trad('link') + ' ' + bannedFrom + ': ' + link);
-			else this.pmReply(this.trad('err'));
+		Tools.uploadToHastebin("Lista de warnwords" + ' ' + bannedFrom + ':\n\n' + banList.join('\n'), function (r, link) {
+			if (r) return this.pmReply("Lista de warnwords" + ' ' + bannedFrom + ': ' + link);
+			else this.pmReply("Error al subir los datos a Hastebin");
 		}.bind(this));
 	},
 	/*------------------*/
