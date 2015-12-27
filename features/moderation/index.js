@@ -254,7 +254,7 @@ function parseChat (room, time, by, message) {
 				}
 			}
 			if (isSpamming) {
-				if (msg.length < 10) {
+				if (msg.length < 5) {
 					muteMessage = ', ' + trad('automod', room) + ': ' + trad('fs', room);
 					pointVal = 3;
 				} else if (msg.toLowerCase().indexOf("http://") > -1 || msg.toLowerCase().indexOf("https://") > -1 || msg.toLowerCase().indexOf("www.") > -1) {
@@ -402,7 +402,7 @@ function parseChat (room, time, by, message) {
 				totalPointVal += 1;
 				if (pointVal < 1) {
 					pointVal = 1;
-					muteMessage = ', ' + trad('automod', room) + ': ' + trad('banword', room);
+					muteMessage = ', ' + trad('automod', room) + ': ' + 'Su mensaje contiene una frase no permitida';
 				}
 				break;
 			}
@@ -413,15 +413,24 @@ function parseChat (room, time, by, message) {
 		var inapropiatephraseSettings = Settings.settings['inapropiatephrases'];
 		var inapropiatePhrases = !!inapropiatephraseSettings ? (Object.keys(inapropiatephraseSettings[room] || {})).concat(Object.keys(inapropiatephraseSettings['global'] || {})) : [];
 		var msgrip = " " + msg.toLowerCase().replace(/[^a-z0-9]/g, ' ') + " ";
-		for (var i = 0; i < inapropiatePhrases.length; i++) {
-			if (msgrip.indexOf(" " + inapropiatePhrases[i] + " ") > -1) {
-				infractions.push(trad('inapword-0', room));
-				totalPointVal += 2;
-				if (pointVal < 2) {
-					pointVal = 2;
-					muteMessage = ', ' + trad('automod', room) + ': ' + trad('inapword', room);
+		if (msgrip.indexOf(" pene ") > -1 || msgrip.indexOf(" penes ") > -1) {
+			infractions.push(trad('inapword-0', room));
+			totalPointVal += 2;
+			if (pointVal < 2) {
+				pointVal = 2;
+				muteMessage = ', ' + trad('automod', room) + ': ' + trad('inapword', room);
+			}
+		} else {
+			for (var i = 0; i < inapropiatePhrases.length; i++) {
+				if (msgrip.indexOf(" " + inapropiatePhrases[i] + " ") > -1) {
+					infractions.push(trad('inapword-0', room));
+					totalPointVal += 1;
+					if (pointVal < 1) {
+						pointVal = 1;
+						muteMessage = ', ' + trad('automod', room) + ': ' + trad('inapword', room);
+					}
+					break;
 				}
-				break;
 			}
 		}
 	}
