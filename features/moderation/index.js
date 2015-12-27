@@ -397,7 +397,7 @@ function parseChat (room, time, by, message) {
 		var warnPhrases = !!warnphraseSettings ? (Object.keys(warnphraseSettings[room] || {})).concat(Object.keys(warnphraseSettings['global'] || {})) : [];
 		var msghop = msg.toLowerCase();
 		for (var i = 0; i < warnPhrases.length; i++) {
-			if (msghop.indexOf(" " + warnPhrases[i] + " ") > -1) {
+			if (msghop.indexOf(warnPhrases[i]) > -1) {
 				infractions.push("Frase no permitida");
 				totalPointVal += 1;
 				if (pointVal < 1) {
