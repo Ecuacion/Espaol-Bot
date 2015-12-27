@@ -395,14 +395,14 @@ function parseChat (room, time, by, message) {
 	if (modSettings['warnwords'] !== 0) {
 		var warnphraseSettings = Settings.settings['warnphrases'];
 		var warnPhrases = !!warnphraseSettings ? (Object.keys(warnphraseSettings[room] || {})).concat(Object.keys(warnphraseSettings['global'] || {})) : [];
-		var msghop = " " + msg.toLowerCase().replace(/[^a-z0-9]/g, ' ') + " ";
+		var msghop = msg.toLowerCase();
 		for (var i = 0; i < warnPhrases.length; i++) {
 			if (msghop.indexOf(" " + warnPhrases[i] + " ") > -1) {
-				infractions.push(trad('inapword-0', room));
+				infractions.push("Frase no permitida");
 				totalPointVal += 1;
 				if (pointVal < 1) {
 					pointVal = 1;
-					muteMessage = ', ' + trad('automod', room) + ': ' + trad('inapword', room);
+					muteMessage = ', ' + trad('automod', room) + ': ' + trad('banword', room);
 				}
 				break;
 			}
@@ -415,7 +415,7 @@ function parseChat (room, time, by, message) {
 		var msgrip = " " + msg.toLowerCase().replace(/[^a-z0-9]/g, ' ') + " ";
 		for (var i = 0; i < inapropiatePhrases.length; i++) {
 			if (msgrip.indexOf(" " + inapropiatePhrases[i] + " ") > -1) {
-				if (infractions.indexOf(trad('inapword-0', room)) === -1) infractions.push(trad('inapword-0', room));
+				infractions.push(trad('inapword-0', room));
 				totalPointVal += 2;
 				if (pointVal < 2) {
 					pointVal = 2;
