@@ -460,6 +460,31 @@
 			'link': 'Frases inapropiadas',
 			'err': 'Error: no se puede subir la lista de frases inapropiadas a hastebin'
 		},
+		racistword: {
+			'notchat': 'Este comando solo está disponible para las salas de chat',
+			'phrase': 'La frase',
+			'already': 'ya estaba en la lista de insultos prohibidos.',
+			'ban': 'es un insulto prohibido a partir de ahora.'
+		},
+		unracistword: {
+			'notchat': 'Este comando solo está disponible para las salas de chat',
+			'phrase': 'La frase',
+			'not': 'no era un insulto prohibido.',
+			'unban': 'ha dejado de ser un insulto prohibido.'
+		},
+		viewracistwords: {
+			'notchat': 'Este comando solo está disponible para las salas de chat',
+			'in': 'en',
+			'globally': 'globalmente',
+			'phrase': 'La frase',
+			'nowords': 'No había insultos prohibidos en esta sala.',
+			'curr': '',
+			'not': 'No',
+			'banned': 'es un insulto prohibido',
+			'list': 'Las siguientes frases son insultos prohibidos',
+			'link': 'Insultos prohibidos',
+			'err': 'Error: no se puede subir la lista de frases inapropiadas a hastebin'
+		},
 		joinphrase: {
 			'notchat': 'Este comando solo está disponible para las salas de chat',
 			'ae': 'Ls frases de entrada ya estaban activadas en esta sala',

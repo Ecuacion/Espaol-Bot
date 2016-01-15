@@ -306,6 +306,8 @@ exports.commands = {
 				}
 				break;
 			case 'data':
+				Tools.uncacheTree('./data-downloader.js');
+				global.DataDownloader = require('./../data-downloader.js');
 				DataDownloader.download();
 				this.reply('Data files reloaded');
 				break;

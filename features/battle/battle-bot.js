@@ -112,7 +112,7 @@
 				var actualDes = {};
 				var moves = [];
 				actualDes.type = 'move';
-				if (req.side.pokemon[i].canMegaEvo) actualDes.mega = true;
+				if (req.side.pokemon[i].canMegaEvo || req.active[i].canMegaEvo) actualDes.mega = true;
 				for (var j = 0; j < req.active[i].moves.length; j++) {
 					if (!req.active[i].moves[j].disabled) moves.push(j + 1);
 				}

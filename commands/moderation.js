@@ -649,6 +649,129 @@ exports.commands = {
 			else this.pmReply(this.trad('err'));
 		}.bind(this));
 	},
+	
+	/*---------------------*/
+
+	insultword: 'racistword',
+	racistword: function (arg, user, room) {
+		if (!this.can('banword')) return;
+		if (!arg) return false;
+
+		var tarRoom;
+		if (this.roomType === 'pm') {
+			if (!this.isRanked('~')) return false;
+			tarRoom = 'global';
+		} else {
+			tarRoom = room;
+		}
+
+		var targetObj = Tools.getTargetRoom(arg);
+		var textHelper = '';
+		if (targetObj && this.isExcepted) {
+			arg = targetObj.arg;
+			tarRoom = targetObj.room;
+			textHelper = ' (' + tarRoom + ')';
+		}
+
+		if (tarRoom !== 'global' && (!Bot.rooms[tarRoom] || Bot.rooms[tarRoom].type !== 'chat')) return this.reply(this.trad('notchat') + textHelper);
+		if (tarRoom === 'salastaff') tarRoom = 'espaol';
+		arg = arg.trim().toLowerCase();
+
+		var bannedPhrases = Settings.settings['racistwords'] ? Settings.settings['racistwords'][tarRoom] : null;
+		if (!bannedPhrases) {
+			if (bannedPhrases === null) Settings.settings['racistwords'] = {};
+			bannedPhrases = (Settings.settings['racistwords'][tarRoom] = {});
+		} else if (bannedPhrases[arg]) {
+			return this.reply(this.trad('phrase') + ' "' + arg + '" ' + this.trad('already') + textHelper);
+		}
+		bannedPhrases[arg] = 1;
+
+		Settings.save();
+		this.reply(this.trad('phrase') + ' "' + arg + '" ' + this.trad('ban') + textHelper);
+	},
+
+	uninsultword: 'unracistword',
+	unracistword: function (arg, user, room) {
+		if (!this.can('banword')) return;
+		if (!arg) return false;
+
+		var tarRoom;
+		if (this.roomType === 'pm') {
+			if (!this.isRanked('~')) return false;
+			tarRoom = 'global';
+		} else {
+			tarRoom = room;
+		}
+
+		var targetObj = Tools.getTargetRoom(arg);
+		var textHelper = '';
+		if (targetObj && this.isExcepted) {
+			arg = targetObj.arg;
+			tarRoom = targetObj.room;
+			textHelper = ' (' + tarRoom + ')';
+		}
+
+		if (tarRoom !== 'global' && (!Bot.rooms[tarRoom] || Bot.rooms[tarRoom].type !== 'chat')) return this.reply(this.trad('notchat') + textHelper);
+		if (tarRoom === 'salastaff') tarRoom = 'espaol';
+		arg = arg.trim().toLowerCase();
+
+		if (!Settings.settings['racistwords']) return this.reply(this.trad('phrase') + ' "' + arg + '" ' + this.trad('not') + textHelper);
+
+		var bannedPhrases = Settings.settings['racistwords'][tarRoom];
+		if (!bannedPhrases || !bannedPhrases[arg]) return this.reply(this.trad('phrase') + ' "' + arg + '" ' + this.trad('not') + textHelper);
+
+		delete bannedPhrases[arg];
+		if (Object.isEmpty(bannedPhrases)) {
+			delete Settings.settings['racistwords'][tarRoom];
+			if (Object.isEmpty(Settings.settings['racistwords'])) delete Settings.settings['racistwords'];
+		}
+
+		Settings.save();
+		this.reply(this.trad('phrase') + ' "' + arg + '" ' + this.trad('unban') + textHelper);
+	},
+
+	vrw: 'viewracistwords',
+	viewracistwords: function (arg, user, room) {
+		if (!this.can('banword')) return;
+		var tarRoom;
+		var text = '';
+		var bannedFrom = '';
+		if (this.roomType === 'pm') {
+			if (!this.isRanked('~')) return false;
+			tarRoom = 'global';
+		} else {
+			tarRoom = room;
+		}
+		var targetObj = Tools.getTargetRoom(arg);
+		var textHelper = '';
+		if (targetObj && this.isExcepted) {
+			arg = targetObj.arg;
+			tarRoom = targetObj.room;
+			textHelper = ' (' + tarRoom + ')';
+		}
+
+		if (tarRoom !== 'global' && (!Bot.rooms[tarRoom] || Bot.rooms[tarRoom].type !== 'chat')) return this.reply(this.trad('notchat') + textHelper);
+		if (tarRoom === 'salastaff') tarRoom = 'espaol';
+
+		if (tarRoom === 'global') bannedFrom += this.trad('globally');
+		else bannedFrom += this.trad('in') + ' ' + tarRoom;
+
+		if (!Settings.settings['racistwords']) return this.reply(this.trad('nowords') + textHelper);
+		var bannedPhrases = Settings.settings['racistwords'][tarRoom];
+		if (!bannedPhrases) return this.reply(this.trad('nowords') + textHelper);
+
+		if (arg.length) {
+			return this.reply(this.trad('phrase') + ' "' + arg + '" ' + this.trad('curr') + ' ' + (bannedPhrases[arg] || (this.trad('not') + ' ')) + this.trad('banned') + ' ' + bannedFrom + '.');
+		}
+
+		var banList = Object.keys(bannedPhrases);
+		if (!banList.length) return this.reply(this.trad('nowords') + textHelper);
+
+		Tools.uploadToHastebin(this.trad('list') + ' ' + bannedFrom + ':\n\n' + banList.join('\n'), function (r, link) {
+			if (r) return this.pmReply(this.trad('link') + ' ' + bannedFrom + ': ' + link);
+			else this.pmReply(this.trad('err'));
+		}.bind(this));
+	},
 
 	/*---------------------*/
 	ww: 'warnword',

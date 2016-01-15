@@ -128,9 +128,6 @@ function botAfterConnect () {
 		}
 		Bot.send(cmds, 2000);
 	}
-	if (!Config.disableDownload) {
-		DataDownloader.download();
-	}
 }
 
 function joinByQueryRequest(target) {
@@ -252,6 +249,9 @@ Bot.on('formats', function (formats) {
 		}
 	}
 	ok('Received battle formats. Total: ' + formatsArr.length);
+	if (!Config.disableDownload) {
+		DataDownloader.download();
+	}
 });
 
 Bot.on('challstr', function (challstr) {

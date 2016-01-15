@@ -29,6 +29,7 @@ function trad (data, room) {
 var chatData = exports.chatData = {};
 var chatLog = exports.chatLog = {};
 var zeroTol = exports.zeroTol = {};
+var shitNames = exports.shitNames = {};
 var cleanDataTimer = null;
 
 var cleanData = exports.cleanData = function () {
@@ -136,6 +137,21 @@ function getArr (data, num) {
 	return res;
 }
 
+function replaceShitNames (room, message) {
+	if (!shitNames[room]) return null;
+	message = " " + message + " ";
+	var regex;
+	var replacedOne = false;
+	var msgRip = message;
+	for (var i in shitNames[room]) {
+		regex = new RegExp("[^a-z0-9A-Z]" + shitNames[room][i].replace(/[.?*+^$[\]\\(){}|-]/g, "\\$&") + "[^a-z0-9A-Z]", 'g');
+		msgRip = msgRip.replace(regex, "&nick;");
+		if (!replacedOne && msgRip !== message) replacedOne = true;
+	}
+	if (!replacedOne) return null;
+	else return msgRip;
+}
+
 function parseChat (room, time, by, message) {
 	var user = toId(by);
 	var rankExcepted = Config.moderation.modException;
@@ -235,8 +251,10 @@ function parseChat (room, time, by, message) {
 	var capsMatch = msg.replace(/[^A-Za-z]/g, '').match(/[A-Z]/g);
 	capsMatch = capsMatch && toId(msg).length > getConst('MIN_CAPS_LENGTH') && (capsMatch.length >= Math.floor(toId(msg).length * getConst('MIN_CAPS_PROPORTION')));
 	var stretchRegExp = new RegExp('(.)\\1{' + getConst('MAX_STRETCH').toString() + ',}', 'g');
+	var stretchRegExpSpam = new RegExp('(.)\\1{25,}', 'g');
 	var repeatRegExp = new RegExp('(..+)\\1{' + getConst('MAX_REPEAT').toString() + ',}', 'g');
 	var stretchMatch = msg.toLowerCase().match(stretchRegExp);
+	var stretchMatchSpam = msg.toLowerCase().match(stretchRegExpSpam);
 	var inlineSpam = stretchMatch ? false : msg.toLowerCase().match(repeatRegExp);
 	var isFlooding = (times.length >= getConst('FLOOD_MESSAGE_NUM') && (time - times[times.length - getConst('FLOOD_MESSAGE_NUM')]) < getConst('FLOOD_MESSAGE_TIME') && (time - times[times.length - getConst('FLOOD_MESSAGE_NUM')]) > (getConst('FLOOD_PER_MSG_MIN') * getConst('FLOOD_MESSAGE_NUM')));
 
@@ -254,10 +272,7 @@ function parseChat (room, time, by, message) {
 				}
 			}
 			if (isSpamming) {
-				if (msg.length < 5) {
-					muteMessage = ', ' + trad('automod', room) + ': ' + trad('fs', room);
-					pointVal = 3;
-				} else if (msg.toLowerCase().indexOf("http://") > -1 || msg.toLowerCase().indexOf("https://") > -1 || msg.toLowerCase().indexOf("www.") > -1) {
+				if (msg.toLowerCase().indexOf("http://") > -1 || msg.toLowerCase().indexOf("https://") > -1 || msg.toLowerCase().indexOf("www.") > -1) {
 					muteMessage = ', ' + trad('automod', room) + ': ' + trad('sl', room);
 					pointVal = 4;
 				} else {
@@ -278,7 +293,7 @@ function parseChat (room, time, by, message) {
 	if (modSettings['spam'] !== 0 && pointVal < 3) {
 		if (times.length >= 3 && (time - times[times.length - 3]) < getConst('FLOOD_MESSAGE_TIME') && msg === chatData[room][user].lastMsgs[0] && chatData[room][user].lastMsgs[0] === chatData[room][user].lastMsgs[1]) {
 			pointVal = 3;
-			muteMessage = ', ' + trad('automod', room) + ': ' + trad('possible', room);
+			muteMessage = ', ' + trad('automod', room) + ': ' + trad('fs', room);
 			if (msg.toLowerCase().indexOf("http://") > -1 || msg.toLowerCase().indexOf("https://") > -1 || msg.toLowerCase().indexOf("www.") > -1) {
 				muteMessage = ', ' + trad('automod', room) + ': ' + trad('sl', room);
 				pointVal = 4;
@@ -293,27 +308,63 @@ function parseChat (room, time, by, message) {
 	* Bacic Mods (caps, stretching, flooding)
 	*********************************************/
 
+	var msgCheckNamesCaps, msgCheckNamesStretch;
 	if (modSettings['caps'] !== 0 && capsMatch) {
-		infractions.push(trad('caps-0', room));
-		totalPointVal += 1;
-		if (pointVal < 1) {
-			pointVal = 1;
-			muteMessage = ', ' + trad('automod', room) + ': ' + trad('caps', room);
+		 msgCheckNamesCaps = replaceShitNames(room, msg);
+		if (msgCheckNamesCaps) {
+			capsMatch = msgCheckNamesCaps.replace(/[^A-Za-z]/g, '').match(/[A-Z]/g);
+			capsMatch = capsMatch && toId(msgCheckNamesCaps).length > getConst('MIN_CAPS_LENGTH') && (capsMatch.length >= Math.floor(toId(msgCheckNamesCaps).length * getConst('MIN_CAPS_PROPORTION')));
+			if (capsMatch) {
+				infractions.push(trad('caps-0', room));
+				totalPointVal += 1;
+				if (pointVal < 1) {
+					pointVal = 1;
+					muteMessage = ', ' + trad('automod', room) + ': ' + trad('caps', room);
+				}
+			}
+		} else {
+			infractions.push(trad('caps-0', room));
+			totalPointVal += 1;
+			if (pointVal < 1) {
+				pointVal = 1;
+				muteMessage = ', ' + trad('automod', room) + ': ' + trad('caps', room);
+			}
+		}
+	}
+
+	if (modSettings['stretching'] !== 0 && stretchMatchSpam) {
+		infractions.push(trad('stretch-0', room));
+		totalPointVal += 2;
+		if (pointVal < 2) {
+			pointVal = 2;
+			muteMessage = ', ' + trad('automod', room) + ': ' + trad('stretch', room);
+		}
+	} else if (modSettings['stretching'] !== 0 && stretchMatch) {
+		msgCheckNamesStretch = msgCheckNamesCaps ? msgCheckNamesCaps : replaceShitNames(room, msg);
+		if (msgCheckNamesStretch) {
+			stretchMatch = msgCheckNamesStretch.toLowerCase().match(stretchRegExp);
+			inlineSpam = stretchMatch ? false : msgCheckNamesStretch.toLowerCase().match(repeatRegExp);
+			if (stretchMatch) {
+				infractions.push(trad('stretch-0', room));
+				totalPointVal += 1;
+				if (pointVal < 1) {
+					pointVal = 1;
+					muteMessage = ', ' + trad('automod', room) + ': ' + trad('stretch', room);
+				}
+			}
+		} else {
+			infractions.push(trad('stretch-0', room));
+			totalPointVal += 1;
+			if (pointVal < 1) {
+				pointVal = 1;
+				muteMessage = ', ' + trad('automod', room) + ': ' + trad('stretch', room);
+			}
 		}
 	}
 
 	if (inlineSpam) {
 		infractions.push(trad('rep-0', room));
 		totalPointVal += 1;
-	}
-
-	if (modSettings['stretching'] !== 0 && stretchMatch) {
-		infractions.push(trad('stretch-0', room));
-		totalPointVal += 1;
-		if (pointVal < 1) {
-			pointVal = 1;
-			muteMessage = ', ' + trad('automod', room) + ': ' + trad('stretch', room);
-		}
 	}
 
 	if (modSettings['flooding'] !== 0 && isFlooding) {
@@ -409,10 +460,10 @@ function parseChat (room, time, by, message) {
 		}
 	}
 
+	var msgrip = " " + msg.toLowerCase().replace(/[^a-z0-9]/g, ' ') + " ";
 	if (modSettings['inapropiate'] !== 0) {
 		var inapropiatephraseSettings = Settings.settings['inapropiatephrases'];
 		var inapropiatePhrases = !!inapropiatephraseSettings ? (Object.keys(inapropiatephraseSettings[room] || {})).concat(Object.keys(inapropiatephraseSettings['global'] || {})) : [];
-		var msgrip = " " + msg.toLowerCase().replace(/[^a-z0-9]/g, ' ') + " ";
 		if (msgrip.indexOf(" pene ") > -1 || msgrip.indexOf(" penes ") > -1) {
 			infractions.push(trad('inapword-0', room));
 			totalPointVal += 2;
@@ -431,6 +482,22 @@ function parseChat (room, time, by, message) {
 					}
 					break;
 				}
+			}
+		}
+	}
+
+	if (modSettings['bannedwords'] !== 0) {
+		var racistwordsSettings = Settings.settings['racistwords'];
+		var racistWords = !!racistwordsSettings ? (Object.keys(racistwordsSettings[room] || {})).concat(Object.keys(racistwordsSettings['global'] || {})) : [];
+		for (var i = 0; i < racistWords.length; i++) {
+			if (msgrip.indexOf(" " + racistWords[i] + " ") > -1) {
+				infractions.push("Insultos");
+				totalPointVal += 2;
+				if (pointVal < 2) {
+					pointVal = 2;
+					muteMessage = ', ' + trad('automod', room) + ': ' + 'Su mensaje contiene insultos racistas o expresiones ofensivas';
+				}
+				break;
 			}
 		}
 	}
@@ -490,22 +557,53 @@ function parseChat (room, time, by, message) {
 	}
 }
 
-function parseJoin (room, by) {
-	var jp = getJoinPhrase(room, by);
-	if (jp) Bot.say(room, jp);
+function checkShitNames (room, by, leftFlag) {	
+	by = by.substr(1); // Remove rank
+	var user = toId(by);
+
+	if (!shitNames[room]) shitNames[room] = {};
+
+	if (leftFlag) {
+		if (shitNames[room][user]) delete shitNames[room][user];
+		return;
+	}
+	
+	//debug("by: " + by);
+
+	//CAPS
+	var capsMatch = by.replace(/[^A-Za-z]/g, '').match(/[A-Z]/g);
+	capsMatch = capsMatch && (capsMatch.length >= Math.floor(toId(by).length * getConst('MIN_CAPS_PROPORTION')));
+
+	//STREECH
+	var stretchRegExp = new RegExp('(.)\\1{' + getConst('MAX_STRETCH').toString() + ',}', 'g');
+	var stretchMatch = by.toLowerCase().match(stretchRegExp);
+
+	if (capsMatch || stretchMatch) {
+		shitNames[room][user] = by;
+	}
+}
+
+function checkBanJoin (room, by) {
 	if (Tools.equalOrHigherRank(by, Config.moderation.modException)) return;
 	var ban = isBanned(room, by);
-	if (ban) Bot.say(room, '/roomban ' + by + ', ' + trad('ab', room) + ((ban === '#range') ? ': Nombre de usuario prohibido' : ''));
+	if (ban) Bot.say(room, '/roomban ' + by + ', ' + trad('ab', room));
+}
+
+function parseJoin (room, by) {
+	checkBanJoin(room, by);
+	var jp = getJoinPhrase(room, by);
+	if (jp) Bot.say(room, jp);
+	checkShitNames(room, by);
 }
 
 function parseLeave (room, by) {
-	return; // parseLeave is useless now, but can be useful later
+	checkShitNames(room, by, true);
 }
 
 function parseRename (room, by, old) {
-	if (Tools.equalOrHigherRank(by, Config.moderation.modException)) return;
-	var ban = isBanned(room, by);
-	if (ban) Bot.say(room, '/roomban ' + by + ', ' + trad('ab', room) + ((ban === '#range') ? ': Nombre de usuario prohibido' : ''));
+	checkBanJoin(room, by);
+	checkShitNames(room, by);
+	checkShitNames(room, old, true);
 }
 
 function parseRaw (room, raw) {
@@ -543,6 +641,8 @@ exports.init = function () {
 		delete chatData[i];
 	for (var i in chatLog)
 		delete chatLog[i];
+	for (var i in shitNames)
+		delete shitNames[i];
 
 	if (cleanDataTimer) clearInterval(cleanDataTimer);
 	cleanDataTimer = null;
@@ -550,10 +650,17 @@ exports.init = function () {
 };
 
 exports.parse = function (room, message, isIntro, spl) {
-	if (isIntro) return;
+	if (isIntro && spl[0] !== "users") return;
 	if (!Bot.rooms[room] || Bot.rooms[room].type !== "chat") return;
 	if (!Config.moderation) Config.moderation = {};
 	switch (spl[0]) {
+		case 'users':
+			shitNames[room] = {};
+			var userArr = message.substr(7).split(",");
+			for (var k = 1; k < userArr.length; k++) {
+				checkShitNames(room, userArr[k])
+			}
+			break;
 		case 'c':
 			var by = spl[1];
 			var timeOff = Date.now();
@@ -575,6 +682,7 @@ exports.parse = function (room, message, isIntro, spl) {
 			break;
 
 		case 'N':
+		case 'n':
 			parseRename(room, spl[1], spl[2]);
 			break;
 		default:

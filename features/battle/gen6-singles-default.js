@@ -471,7 +471,7 @@ module.exports = {
 		} else if (req.active) {
 			var actualDes = {};
 			var moves = [];
-			if (req.side.pokemon[0].canMegaEvo) {
+			if (req.side.pokemon[0].canMegaEvo || (req.active && req.active[0] && req.active[0].canMegaEvo)) {
 				actualDes.mega = true;
 				var dataNewMega = require(POKEDEX_FILE).BattlePokedex[toId(data.statusData.self.pokemon[0].species + "-Mega")];
 				if (dataNewMega) {
