@@ -5,13 +5,13 @@ function canChallenge(i, nBattles) {
 	if (!nBattles) return true; //If it is not busy, accept the challenge
 	if (Config.aceptAll) return true; //Acept all challenges if 'aceptAll' is enabled
 	if (Config.maxBattles && Config.maxBattles > nBattles) return true; //If it is not in too many battles, accept the challenge
-	if (Tools.equalOrHigherRank(i, '%')) return true; //Staff exception
+	if (Tools.equalOrHigherRank(i, Tools.getGroup('driver'))) return true; //Staff exception
 	return false;
 }
 
 exports.parse = function (room, message, isIntro, spl) {
 	if (spl[0] !== 'updatechallenges') return;
-	var nBattles = Object.keys(Features['battle'].BattleBot.data).length;
+	var nBattles = Object.keys(Features['battle'].BattleBot.battles).length;
 	try {
 		exports.challenges = JSON.parse(message.substr(18));
 	} catch (e) {return;}
@@ -20,7 +20,7 @@ exports.parse = function (room, message, isIntro, spl) {
 			if (canChallenge(i, nBattles)) {
 				var format = exports.challenges.challengesFrom[i];
 
-				if (!(format in Formats) || !Formats[format].chall) {
+				if (Settings.lockdown || !(format in Formats) || !Formats[format].chall) {
 					Bot.say('', '/reject ' + i);
 					continue;
 				}

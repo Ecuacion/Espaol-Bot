@@ -1,4 +1,4 @@
-const teamsDataFile = './data/teams.json';
+const teamsDataFile = "./data/" + 'teams.json';
 
 module.exports = {
 	teams: {},

@@ -110,6 +110,11 @@ exports.addLeftZero = function (num, nz) {
 	return str;
 };
 
+exports.escapeHTML = function (str) {
+	if (!str) return '';
+	return ('' + str).escapeHTML();
+};
+
 exports.watchFile = function () {
 	try {
 		return fs.watchFile.apply(fs, arguments);

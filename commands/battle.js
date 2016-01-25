@@ -42,9 +42,7 @@ exports.commands = {
 		if (!this.isExcepted) return false;
 		if (this.roomType !== 'battle') return this.reply(this.trad('notbattle'));
 		try {
-			if (!arg) Features['battle'].BattleBot.receive(room, "|forcemove|");
-			else if (arg === "random") Features['battle'].BattleBot.receive(room, "|forcemoverandom|");
-			else this.say(room, '/choose ' + arg);
+			Features['battle'].BattleBot.battles[room].makeDecision(true);
 		} catch (e) {
 			this.reply('Error: ' + sys.inspect(e));
 		}
