@@ -3,7 +3,7 @@
 	Games
 */
 
-if (global.Games) {
+/*if (global.Games) {
 	for (var i in Games) {
 		if (Games[i].game && typeof Games[i].game.destroy === "function") {
 			try {
@@ -14,7 +14,7 @@ if (global.Games) {
 	}
 }
 
-global.Games = {};
+global.Games = {};*/
 
 if (Settings.timeouts) {
 	for (var i in Settings.timeouts) {
@@ -52,7 +52,7 @@ function parseTime (str) {
 *				Anagrams
 ******************************************/
 
-function generateRandomWord () {
+/*function generateRandomWord () {
 	var res = {word: '', clue: ''};
 	try {
 		var hangmanWords = require('./../hangman-data.js').hangmanWords;
@@ -268,13 +268,13 @@ var Anagrams = function () {
 		}
 	};
 	return anagramObj;
-};
+};*/
 
 /*****************************************
 *				Hangman
 ******************************************/
 
-var Hangman = function () {
+/*var Hangman = function () {
 	var hangmanObj = {
 		word: {},
 		wordStr: '',
@@ -369,13 +369,13 @@ var Hangman = function () {
 		}
 	};
 	return hangmanObj;
-};
+};*/
 
 /*****************************************
 *				AMBUSH
 ******************************************/
 
-var Ambush = (function () {
+/*var Ambush = (function () {
 	function Ambush (room) {
 		this.room = room;
 	}
@@ -384,7 +384,7 @@ var Ambush = (function () {
 		this.players = {};
 		this.numPlayers = 0;
 		this.started = false;
-		Bot.say(this.room, "Se ha iniciado un juego de **Ambush**! Para inscribirse usad **/me in**. Consiste en eliminar a otros usuarios usando /me fires [usuario]. El juego termina cuando solo quede uno.");
+		Bot.say(this.room, "Se ha iniciado un juego de **Ambush**! Para inscribirse usad ** /me in**. Consiste en eliminar a otros usuarios usando /me fires [usuario]. El juego termina cuando solo quede uno.");
 	};
 	Ambush.prototype.addPlayer = function (player, name) {
 		if (this.players[player] || this.started) return false;
@@ -395,7 +395,7 @@ var Ambush = (function () {
 	Ambush.prototype.startGame = function () {
 		if (this.numPlayers < 2 || this.started) return false;
 		this.started = true;
-		Bot.say(this.room, "**Fuego!** Para disparar usad **/me fires [usuario]**");
+		Bot.say(this.room, "**Fuego!** Para disparar usad ** /me fires [usuario]**");
 		return true;
 	};
 	Ambush.prototype.getPlayers = function () {
@@ -430,7 +430,7 @@ var Ambush = (function () {
 	};
 
 	return Ambush;
-})();
+})();*/
 
 var Timer = (function () {
 	function Timer (room, time, interv, announce) {
@@ -485,7 +485,7 @@ var Timer = (function () {
 * Blackjack
 ******************/
 
-function generateDeck () {
+/*function generateDeck () {
 	var deck = [];
 	var cards = ['\u2660', '\u2663', '\u2665', '\u2666'];
 	var values = ['A', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K'];
@@ -519,7 +519,7 @@ function formateHand (hand, total, str1) {
 var bjParser = function (type, data) {
 	switch (type) {
 		case 'singups':
-			Bot.say(this.room, "Se ha iniciado un nuevo juego de **Blackjack**! Para incribirse usad **/me in**. Para comenzar el juego, se debe usar **.bj start**");
+			Bot.say(this.room, "Se ha iniciado un nuevo juego de **Blackjack**! Para incribirse usad ** /me in**. Para comenzar el juego, se debe usar **.bj start**");
 			break;
 		case 'start':
 			Bot.say(this.room, "**" + "El juego de Blackjack ha comenzado" + "** " + "Primera carta de la Banca" + ": **[" + this.dealerHand[0].card + this.dealerHand[0].value + "]**");
@@ -769,52 +769,11 @@ var BlackJack = exports.BlackJack = (function () {
 	};
 
 	return BlackJack;
-})();
+})();*/
 
 Settings.addPermissions(['games']);
 
 exports.commands = {
-	bj: 'blackjack',
-	blackjack: function (arg, by, room, cmd) {
-		if (!this.can('games')) return false;
-		if (Games[room]) {
-			if (Games[room].type === 'Blackjack' && toId(arg) === 'end') {
-				this.reply("El juego de " + Games[room].type + " ha sido finalizado!");
-				try {
-					Games[room].game.destroy();
-				} catch (e) {}
-				delete Games[room]; //deallocate
-				return;
-			} else if (Games[room].type === 'Blackjack' && toId(arg) === 'start') {
-				if (!Games[room].game.start()) this.reply("No hay participantes suficientes para que se pueda iniciar el juego");
-				return;
-			} else if (Games[room].type === 'Blackjack' && toId(arg) === 'players') {
-				if (!Object.keys(Games[room].game.users).length) return this.restrictReply("No hay ningún jugador participando en el juego de Blackjack", "games");
-				this.restrictReply("**" + "Jugadores" + " (" + Object.keys(Games[room].game.users).length + "):** " + Games[room].game.getPlayers().join(', '), 'games');
-				return
-			}
-			return this.reply('Ya hay un juego de ' + Games[room].type + '. No se puede iniciar otro');
-		}
-		var args = arg.split(',');
-		var opts = {room: room, title: 'Blackjack'};
-		var players = (toId(args[1] || '')) ? parseInt(args[1]) : 16;
-		if (toId(args[0]) !== 'new' || !players || players < 1) return this.reply("Usa el comando así: .bj new, (numero maximo de jugadores)");
-		if (players < 2) return this.reply("El máximo no puede ser inferior a 2 jugadores");
-		opts.maxPlayers = players;
-		Games[room] = {
-			type: 'Blackjack',
-			game: new BlackJack(opts, bjParser)
-		};
-		Games[room].game.init();
-	},
-	hit: function (arg, by, room, cmd) {
-		if (!Games[room] || Games[room].type !== 'Blackjack') return;
-		Games[room].game.hit(by);
-	},
-	stand: function (arg, by, room, cmd) {
-		if (!Games[room] || Games[room].type !== 'Blackjack') return;
-		Games[room].game.stand(by);
-	},
 	timer: 'timeout',
 	timeout: function (arg, by, room, cmd) {
 		if (!this.can('games')) return false;
@@ -854,9 +813,9 @@ exports.commands = {
 		Settings.timeouts[room].destroy();
 		delete Settings.timeouts[room];
 		this.reply("El timer ha sido detenido");
-	},
+	}
 
-	hangmanstatus: 'hangman',
+	/*hangmanstatus: 'hangman',
 	ahorcado: 'hangman',
 	hangman: function(arg, by, room, cmd) {
 		if (!this.can('games')) return false;
@@ -868,7 +827,7 @@ exports.commands = {
 			return this.reply('Ya hay un juego de ' + Games[room].type + '. No se puede iniciar otro')
 		}
 
-		/* Create game generator */
+		/ * Create game generator * /
 		var maxFail = false;
 		if (arg) maxFail = parseInt(arg);
 		Games[room] = {
@@ -876,7 +835,7 @@ exports.commands = {
 			game: new Hangman()
 		};
 		
-		/* Get random phrase */
+		/* Get random phrase * /
 		var phrase = '';
 		var clue = '';
 		
@@ -902,7 +861,7 @@ exports.commands = {
 		phrase = wordsF[Math.floor(Math.random() * wordsF.length)];
 		clue = randClue;
 		
-		/* Init game */
+		/* Init game * /
 		var res = Games[room].game.init(phrase);
 		Games[room].game.clue = clue;
 		if (maxFail) {
@@ -1236,5 +1195,47 @@ exports.commands = {
 			Games[room].game.destroy();
 		} catch (e) {}
 		delete Games[room]; //deallocate
-	}
+	},
+	
+	bj: 'blackjack',
+	blackjack: function (arg, by, room, cmd) {
+		if (!this.can('games')) return false;
+		if (Games[room]) {
+			if (Games[room].type === 'Blackjack' && toId(arg) === 'end') {
+				this.reply("El juego de " + Games[room].type + " ha sido finalizado!");
+				try {
+					Games[room].game.destroy();
+				} catch (e) {}
+				delete Games[room]; //deallocate
+				return;
+			} else if (Games[room].type === 'Blackjack' && toId(arg) === 'start') {
+				if (!Games[room].game.start()) this.reply("No hay participantes suficientes para que se pueda iniciar el juego");
+				return;
+			} else if (Games[room].type === 'Blackjack' && toId(arg) === 'players') {
+				if (!Object.keys(Games[room].game.users).length) return this.restrictReply("No hay ningún jugador participando en el juego de Blackjack", "games");
+				this.restrictReply("**" + "Jugadores" + " (" + Object.keys(Games[room].game.users).length + "):** " + Games[room].game.getPlayers().join(', '), 'games');
+				return
+			}
+			return this.reply('Ya hay un juego de ' + Games[room].type + '. No se puede iniciar otro');
+		}
+		var args = arg.split(',');
+		var opts = {room: room, title: 'Blackjack'};
+		var players = (toId(args[1] || '')) ? parseInt(args[1]) : 16;
+		if (toId(args[0]) !== 'new' || !players || players < 1) return this.reply("Usa el comando así: .bj new, (numero maximo de jugadores)");
+		if (players < 2) return this.reply("El máximo no puede ser inferior a 2 jugadores");
+		opts.maxPlayers = players;
+		Games[room] = {
+			type: 'Blackjack',
+			game: new BlackJack(opts, bjParser)
+		};
+		Games[room].game.init();
+	},
+	hit: function (arg, by, room, cmd) {
+		if (!Games[room] || Games[room].type !== 'Blackjack') return;
+		Games[room].game.hit(by);
+	},
+	stand: function (arg, by, room, cmd) {
+		if (!Games[room] || Games[room].type !== 'Blackjack') return;
+		Games[room].game.stand(by);
+	},*/
 };

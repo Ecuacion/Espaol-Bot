@@ -2,6 +2,7 @@ data/*.js
 data/*.json
 data/_temp
 config.js
+!data/*-example.js
 
 #gulp
 gulp-cache

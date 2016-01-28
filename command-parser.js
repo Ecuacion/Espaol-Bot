@@ -156,7 +156,7 @@ var saveDynCmds = exports.saveDinCmds =  function () {
 var commandTokens = exports.commandTokens = [];
 
 var reloadTokens = exports.reloadTokens = function () {
-	commandTokens = [];
+	commandTokens = exports.commandTokens = [];
 	if (Config.commandTokens && Config.commandTokens.length) {
 		for (var i = 0; i < Config.commandTokens.length; i++)
 			commandTokens.push(Config.commandTokens[i]);
@@ -305,6 +305,8 @@ var parse = exports.parse = function (room, by, msg) {
 		Bot.say('', '/join ' +  msg.substr(8));
 		return;
 	}
+
+	if (Settings.callParseFilters(room, by, msg)) return;
 
 	var cmdToken = null;
 

@@ -116,6 +116,28 @@ exports.addPermissions = function (perms) {
 	}
 };
 
+var parserFilters = exports.parserFilters = {};
+
+exports.callParseFilters = function (room, by, msg) {
+	for (var f in parserFilters) {
+		if (typeof parserFilters[f] === "function") {
+			if (parserFilters[f].call(this, room, by, msg)) return true;
+		}
+	}
+	return false;
+};
+
+exports.addParseFilter = function (id, func) {
+	parserFilters[id] = func;
+	return true;
+};
+
+exports.deleteParseFilter = function (id) {
+	if (!parserFilters[id]) return false;
+	delete parserFilters[id];
+	return true;
+};
+
 var seen = exports.seen = {};
 var reportSeen = exports.reportSeen = function (user, room, action, args) {
 	if (!args) args = [];
