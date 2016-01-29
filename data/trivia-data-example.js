@@ -10,9 +10,9 @@
 */
 
 exports.questions = [
-	{q: "Pokemon with highest HP stat", a: "Blissey"},
-	{q: "What is Mega Venusaur's ability", a: "Thick Fat"},
-	{q: "How many PP does hyper beam have normally (number only)", a: "5"},
+	{q: "Pokemon con la estadística más alta en HP", a: "Blissey"},
+	{q: "Cual es la habilidad de Mega-Venusaur?", a: "Thick Fat"},
+	{q: "Cuantos PP tiene hyper beam normalmente (solo el número)", a: "5"},
 	{q: "This is the only Dark-Type move Clawitzer learns", a: "Dark Pulse"},
 	{q: "Which Pokemon according to the Unova horoscope represents Libra?", a: "Lampent"},
 	{q: "What Fighting-type move is guaranteed to cause a critical hit?", a: "Storm Throw"},

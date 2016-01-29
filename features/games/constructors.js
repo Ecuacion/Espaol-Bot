@@ -867,13 +867,24 @@ var PassTheBomb = exports.PassTheBomb = (function () {
 		delete this.players[this.playerWithBomb];
 		this.wait();
 	};
+	
+	PassTheBomb.prototype.dq = function (user) {
+		this.clearTimers();
+		this.status = 2;
+		this.emit('dq', this.players[user]);
+		delete this.players[user];
+		this.wait();
+	};
 
 	PassTheBomb.prototype.pass = function (user1, user2) {
 		if (this.status !== 3) return;
 		user1 = toId(user1);
 		user2 = toId(user2);
-		if (this.playerWithBomb !== user1) return;
 		if (!this.players[user1] || !this.players[user2]) return;
+		if (this.playerWithBomb !== user1) {
+			this.dq(user1);
+			return;
+		}
 		this.playerWithBomb = user2;
 	};
 

@@ -784,7 +784,10 @@ exports.commands = {
 		time = parseTime(args[0]);
 		interv = parseTime(args[1]);
 		if (!time || isNaN(interv)) return this.reply('Uso correcto: ' + this.cmdToken + cmd + ' [tiempo] / [intervalo de aviso]. Los tiempos se especifican del modo [minutos]min,[segundos]sec, etc. Ejemplo: ' + this.cmdToken + this.cmd + ' 1min,30sec / 15sec');
-		if (!interv) interv = (10 * 1000);
+		if (!interv) {
+			if (time >= 30 * 1000) interv = (30 * 1000);
+			else interv = (10 * 1000);
+		}
 		if (interv < (10 * 1000) || interv > time) return this.reply('El intervalo de aviso no puede ser inferior a 10 segundos ni superior al tiempo total');
 		if (time > (3 * 24 * 60 * 60 * 1000)) return this.reply('Más de 3 días es demasiado tiempo para un timer');
 		var an = function (t) {

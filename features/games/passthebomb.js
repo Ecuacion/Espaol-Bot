@@ -1,4 +1,4 @@
-/*
+﻿/*
 	PassTheBomb
 */
 
@@ -43,6 +43,9 @@ var parser = function (type, data) {
 			break;
 		case 'bomb':
 			send(this.room, "**BOMB!** " + data + " " + trans("lose", this.room));
+			break;
+		case 'dq':
+			send(this.room, "**RIP!** " + data + " " + " pierde por tratar de pasar la bomba cuando no la tenía");
 			break;
 		case 'end':
 			send(this.room, trans("end1", this.room) + " **" + data + "** " + trans("end2", this.room));
