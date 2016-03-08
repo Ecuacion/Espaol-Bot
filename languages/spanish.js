@@ -724,7 +724,7 @@
 			'topcard': 'Primera carta de la Banca',
 			'turn1': 'Turno de',
 			'turn2': '!',
-			'helpturn1': 'Usa **$hit** para pedir cartas y **$stand** para quedarse y finaliar el turno (tienes un máximo de',
+			'helpturn1': 'Usa **$hit** para pedir cartas y **$stand** para quedarse y finalizar el turno (tienes un máximo de',
 			'helpturn2': 'segundos)',
 			'hand1': 'Mano de',
 			'hand2': '',
