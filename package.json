@@ -1,6 +1,6 @@
 {
   "name": "espaol-bot",
-  "version": "2.1.4",
+  "version": "3.0.0",
   "author": {
     "name": "Ecuacion",
 	"email": "alajandro5gt01@gmail.com",
@@ -33,18 +33,7 @@
     "sugar": "1.4.1",
     "colors": "1.0.3",
 	"github": "0.2.4",
-	"node-ps-client": "0.2.1"
-  },
-  "devDependencies": {
-    "cache-swap": "~0.2.0",
-    "gulp": "~3.9.0",
-    "gulp-cache": "~0.2.8",
-    "gulp-jshint": "~1.11.2",
-    "gulp-jscs": "~1.6.0",
-    "gulp-replace": "~0.5.1",
-    "jshint-stylish": "~2.0.0",
-    "lazypipe": "~1.0.1",
-    "merge-stream": "~0.1.7"
+	"websocket": "1.0.18"
   },
   "description": "Pokemon Showdown Bot",
   "homepage": "https://github.com/Ecuacion/Espaol-Bot"

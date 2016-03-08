@@ -28,6 +28,12 @@ exports.translations = {
 			'c': 'chatting in',
 			'n': 'changing nick to'
 		},
+		alts: {
+			'inv': 'Invalid username',
+			'n': 'No alts found for user',
+			'alts': 'Known alts of',
+			'more': 'more'
+		},
 		language: {
 			'notchat': 'This command is only available for chat rooms',
 			'nolang': 'You must specify a language',

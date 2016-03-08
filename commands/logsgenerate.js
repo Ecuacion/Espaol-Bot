@@ -86,6 +86,18 @@ function getBanWords (tarRoom) {
 	return "Frases prohibidas en " + tarRoom + ":\n\n" + banList.join('\n');
 }
 
+if (global.UDLTimerInterval) clearInterval(global.UDLTimerInterval);
+
+global.UDLTimerInterval = setInterval(function () {
+	checkDir(DATA_LOGS_PATH);
+	writeFile("commands.log", getDynCmds());
+	writeFile("zerotlerance.log", getZeroTol());
+	writeFile("autoban-espaol.log", getAutoBan("espaol"));
+	writeFile("autoban-eventos.log", getAutoBan("eventos"));
+	writeFile("banwords-espaol.log", getBanWords("espaol"));
+	writeFile("banwords-eventos.log", getBanWords("eventos"));
+}, 60 * 60 * 1000);
+
 exports.commands = {
 	setlogslink: function (arg, by, room, cmd) {
 		if (!this.isExcepted) return false;
