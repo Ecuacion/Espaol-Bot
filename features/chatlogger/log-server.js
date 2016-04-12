@@ -341,14 +341,14 @@ var handleRequest = function (request, response) {
 
 var server = http.createServer(handleRequest);
 
+server.on("error", function (e) {
+	error("Has iniciado 2 bots. Acaba con uno para poder iniciar este.");
+	process.exit(1);
+});
+
 setTimeout(function () {
-	try{
-		server.listen(opts.port, opts.bindaddress);
-		report("Log Server Listening at " + (opts.bindaddress || "localhost") + ":" + opts.port);
-	} catch (e) {
-		error("Has iniciado 2 bots. Acaba con uno para poder iniciar este.");
-		process.exit(1);
-	}
+	server.listen(opts.port, opts.bindaddress);
+	report("Log Server Listening at " + (opts.bindaddress || "localhost") + ":" + opts.port);
 }, 1000);
 
 exports.server = server;
