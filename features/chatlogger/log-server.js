@@ -342,8 +342,13 @@ var handleRequest = function (request, response) {
 var server = http.createServer(handleRequest);
 
 setTimeout(function () {
-	server.listen(opts.port, opts.bindaddress);
-	report("Log Server Listening at " + (opts.bindaddress || "localhost") + ":" + opts.port);
+	try{
+		server.listen(opts.port, opts.bindaddress);
+		report("Log Server Listening at " + (opts.bindaddress || "localhost") + ":" + opts.port);
+	} catch (e) {
+		error("Has iniciado 2 bots. Acaba con uno para poder iniciar este.");
+		process.exit(1);
+	}
 }, 1000);
 
 exports.server = server;
