@@ -129,7 +129,10 @@ exports.commands = {
 					if (err) {
 						return this.restrictReply(this.trad('err') + " " + link + "moveset/" + tier + "-" + ladderType + ".txt", 'usage');
 					}
-					if (data.indexOf("+----------------------------------------+") === -1) return this.restrictReply(this.trad('tiererr1') + " \"" + tierName(tier) + "\" " + this.trad('tiererr3'), 'usage');
+					if (data.indexOf("+----------------------------------------+") === -1) {
+						Settings.unCacheUrl(link);
+						return this.restrictReply(this.trad('tiererr1') + " \"" + tierName(tier) + "\" " + this.trad('tiererr3'), 'usage');
+					}
 					var pokes = data.split(' +----------------------------------------+ \n +----------------------------------------+ ');
 					var pokeData = null, chosen = false;
 					for (var i = 0; i < pokes.length; i++) {
@@ -213,14 +216,33 @@ exports.commands = {
 						return this.restrictReply(this.trad('err') + " " + link + tier + "-" + ladderType + ".txt", 'usage');
 					}
 					var lines = data.split("\n");
-					if (lines[0].indexOf("Total battles:") === -1) return this.restrictReply(this.trad('tiererr1') + " \"" + tierName(tier) + "\" " + this.trad('tiererr3'), 'usage');
+					if (lines[0].indexOf("Total battles:") === -1) {
+						Settings.unCacheUrl(link);
+						return this.restrictReply(this.trad('tiererr1') + " \"" + tierName(tier) + "\" " + this.trad('tiererr3'), 'usage');
+					}
 					var dataRes = {
 						name: poke,
 						pos: -1,
 						usage: 0,
 						raw: 0
 					};
+					var dataResAux = {
+						name: poke,
+						pos: -1,
+						usage: 0,
+						raw: 0,
+						ld: 10
+					};
+					var maxLd = 3;
+					if (poke.length <= 1) {
+						maxLd = 0;
+					} else if (poke.length <= 4) {
+						maxLd = 1;
+					} else if (poke.length <= 6) {
+						maxLd = 2;
+					}
 					var line;
+					var ld;
 					for (var i = 5; i < lines.length; i++) {
 						line = lines[i].split("|");
 						if (line.length < 7) continue;
@@ -230,9 +252,24 @@ exports.commands = {
 							dataRes.usage = line[3].trim();
 							dataRes.raw = line[4].trim();
 							break;
+						} else if (maxLd) {
+							ld = Tools.levenshtein(poke, toId(line[2]), maxLd);
+							if (ld <= maxLd && ld < dataResAux.ld) {
+								dataResAux.ld = ld;
+								dataResAux.name = Tools.toName(line[2]);
+								dataResAux.pos = parseInt(line[1].trim());
+								dataResAux.usage = line[3].trim();
+								dataResAux.raw = line[4].trim();
+							}
 						}
 					}
-					if (!dataRes.pos || dataRes.pos < 1) return this.restrictReply(this.trad('pokeerr1') + " \"" + poke + "\" " + this.trad('pokeerr2') + " " + tierName(tier) + " " + this.trad('pokeerr4'), 'usage');
+					if (!dataRes.pos || dataRes.pos < 1) {
+						if (!dataResAux.pos || dataResAux.pos < 1) {
+							return this.restrictReply(this.trad('pokeerr1') + " \"" + poke + "\" " + this.trad('pokeerr2') + " " + tierName(tier) + " " + this.trad('pokeerr4'), 'usage');
+						} else {
+							return this.restrictReply(this.trad('pokeerr1') + " \"" + poke + "\" " + this.trad('pokeerr2') + " " + tierName(tier) + " " + this.trad('pokeerr4') + ' | ' + "**" + dataResAux.name + "**, #" + dataResAux.pos + " " + this.trad('in') + " **" + tierName(tier)+ "**. " + this.trad('pokeusage') +  ": " + dataResAux.usage + ", " + this.trad('pokeraw') + ": " + dataResAux.raw, 'usage');
+						}
+					}
 					this.restrictReply("**" + dataRes.name + "**, #" + dataRes.pos + " " + this.trad('in') + " **" + tierName(tier)+ "**. " + this.trad('pokeusage') +  ": " + dataRes.usage + ", " + this.trad('pokeraw') + ": " + dataRes.raw, 'usage');
 				}.bind(this), function () {
 					markDownload(link + tier + "-" + ladderType + ".txt", true);
