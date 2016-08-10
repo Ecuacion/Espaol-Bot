@@ -293,7 +293,7 @@ exports.commands = {
 	vzt: 'zerotol',
 	viewzerotol: 'zerotol',
 	zerotol: function (arg, by, room, cmd) {
-		if (!arg) {
+		if (!arg && cmd !== 'vzt' && cmd !== 'viewzerotol') {
 			return this.pmReply('Actualmente **' + (getZeroTol(toId(by)) ? 'SÍ' : 'NO') + '** estás en la lista de tolerancia cero.');
 		}
 		if (!this.isRoomRanked('salastaff', '%')) return false;
