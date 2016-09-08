@@ -313,6 +313,7 @@ var Client = (function () {
 	};
 
 	Client.prototype.sendRoom = function (room, data, delay) {
+		if (room === 'espaol') room = 'espanol';
 		if (!(data instanceof Array)) {
 			data = [data.toString()];
 		}
@@ -323,6 +324,7 @@ var Client = (function () {
 	};
 
 	Client.prototype.say = function (room, msg) {
+		if (room === 'espaol') room = 'espanol';
 		if (room.charAt(0) === ',') {
 			return this.pm(room.substr(1), msg);
 		}
@@ -389,6 +391,7 @@ var Client = (function () {
 			if (spl[0].charAt(0) === '>') {
 				room = spl[0].substr(1);
 				if (room === '') room = 'lobby';
+				if (room === 'espanol') room = 'espaol';
 			}
 			for (var i = 0, len = spl.length; i < len; i++) {
 				if (spl[i].split('|')[1] && (spl[i].split('|')[1] === 'init')) {
