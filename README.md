@@ -1,13 +1,9 @@
-﻿Bot para la sala Español de Pokemon Showdown
+Bot para la sala Español de Pokemon Showdown (Obsoleto)
 ====================
 
-Este es un bot basado en [Pokemon-Showdown-Node-Bot](https://github.com/Ecuacion/Pokemon-Showdown-Node-Bot)
+Este repositorio está obsoleto.
 
-Para una guía de comandos: [http://ps-salaespanol.proboards.com/thread/1366/gu-del-bot-sala-aminitrabottt](http://ps-salaespanol.proboards.com/thread/1366/gu-del-bot-sala-aminitrabottt)
+Para la nueva versión del bot de la sala Español de Pokemon Showdown, conmsultar el siguiente repositorio:
 
-En caso de un error o sugerencia reportar aquí: [https://github.com/Ecuacion/Espaol-Bot/issues](https://github.com/Ecuacion/Espaol-Bot/issues)
-
-Contribuidores: 
- - [Ecuacion](https://github.com/Ecuacion/)
- - [xJoelituh](https://github.com/xJoelituh/)
+ - [Showdown-ChatBot](https://github.com/AgustinSRG/Showdown-ChatBot)
  
